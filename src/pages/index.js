@@ -5,6 +5,7 @@ const Home = () => import('./Home.vue');
 const Ticket = () => import('./Ticket.vue');
 const Account = () => import('./Account.vue');
 const Help = () => import('./Help.vue');
+const Register = () => import('./Register.vue');
 const NotFound = () => import('./NotFound.vue');
 
 Vue.use(Router);
@@ -45,6 +46,15 @@ const router = new Router({
       path: '/help',
       name: 'help',
       component: Help,
+      meta: {
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
       meta: {
         level: 1,
         back: {name: 'account'}

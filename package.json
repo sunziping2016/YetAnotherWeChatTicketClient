@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/sunziping2016/YAWeChatTicketClient#readme",
   "dependencies": {
+    "axios": "^0.16.2",
     "marked": "^0.3.6",
     "vue": "^2.4.4",
     "vue-awesome": "^2.3.3",

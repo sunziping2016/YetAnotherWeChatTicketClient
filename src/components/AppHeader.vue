@@ -32,6 +32,4 @@
 </script>
 
 <style lang="stylus">
-  .app-header .toolbar__content
-    height 64px!important;
 </style>

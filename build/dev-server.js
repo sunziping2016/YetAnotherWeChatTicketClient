@@ -9,13 +9,13 @@ const webpackConfig = require('./webpack.dev.conf');
 
 const port = process.env.PORT || 23328;
 const proxyOption = {
-  target: 'http://localhost:20579',
+  target: 'http://localhost:49342',
   ws: true,
   changeOrigin: true
 };
 const proxyTable = {
-  '/users/': proxyOption,
-  '/socket.io/': proxyOption
+  '/api': proxyOption,
+  '/uploads': proxyOption
 };
 
 let app = express();
