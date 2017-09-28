@@ -10,7 +10,7 @@
       </transition>
       <bottom-navigation class="hidden-sm-and-up"></bottom-navigation>
     </main>
-    <!--<app-snackbar></app-snackbar>-->
+    <app-snackbar></app-snackbar>
   </v-app>
 </template>
 

@@ -66,7 +66,7 @@
     computed: {
       registerValid() {
         return !this.usernameError && !this.passwordError &&
-          this.username && this.password && !this.registering;
+          this.username && this.password && !this.registering && !this.studentId;
       },
     },
     watch: {
@@ -96,6 +96,7 @@
           password: this.password
         }).then(result => {
           this.studentId = result._id;
+          this.$store.commit('appshell/addSnackbarMessage', '账号认证成功！');
         }).catch(error => {
           switch (error.type) {
             case 'EAUTH':
