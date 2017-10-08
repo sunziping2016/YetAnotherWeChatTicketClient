@@ -1,6 +1,6 @@
 <template>
   <div class="app-not-found-page">
-    <div class="app-not-found-title text-xs-center">
+    <div class="app-not-found-title">
       <div class="not-found-avatar">
         <v-icon class="not-found-avatar-icon">info</v-icon>
       </div>
@@ -18,12 +18,14 @@
 </script>
 
 <style lang="stylus" scoped>
-
   .app-not-found-title
     margin-top 50px
     color #666
     font-size 24px
     font-weight bold
+    display flex
+    flex-direction column
+    align-items center
 
   .not-found-avatar-icon
     width 120px

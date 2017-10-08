@@ -7,6 +7,9 @@ const Account = () => import('./Account.vue');
 const Help = () => import('./Help.vue');
 const Register = () => import('./Register.vue');
 const NotFound = () => import('./NotFound.vue');
+const Activity = () => import('./Activity.vue');
+const AccountInfo = () => import('./AccountInfo.vue');
+const Login = () => import('./Login.vue');
 
 Vue.use(Router);
 
@@ -25,6 +28,16 @@ const router = new Router({
       }
     },
     {
+      path: '/activity/:id',
+      name: 'activity',
+      component: Activity,
+      meta: {
+        level: 1,
+        title: '活动',
+        back: {name: 'home'}
+      }
+    },
+    {
       path: '/ticket',
       name: 'ticket',
       component: Ticket,
@@ -38,8 +51,29 @@ const router = new Router({
       name: 'account',
       component: Account,
       meta: {
+        title: '账户',
         level: 0,
         tabIndex: 2
+      }
+    },
+    {
+      path: '/account/info',
+      name: 'accountInfo',
+      component: AccountInfo,
+      meta: {
+        title: '账户信息',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: {
+        title: '登录',
+        level: 1,
+        back: {name: 'account'}
       }
     },
     {
@@ -47,6 +81,7 @@ const router = new Router({
       name: 'help',
       component: Help,
       meta: {
+        title: '帮助',
         level: 1,
         back: {name: 'account'}
       }
@@ -56,6 +91,7 @@ const router = new Router({
       name: 'register',
       component: Register,
       meta: {
+        title: '注册',
         level: 1,
         back: {name: 'account'}
       }
@@ -83,7 +119,8 @@ router.beforeEach(function (to, from, next) {
     if (fromLevel === toLevel) {
       const fromTabIndex = from.meta.tabIndex,
         toTabIndex = to.meta.tabIndex;
-      if (fromTabIndex === undefined || toTabIndex === undefined)
+      if (fromTabIndex === undefined || toTabIndex === undefined ||
+          $store.state.appshell.breakpoint.mdAndUp)
         $store.commit('appshell/setRouterTransition', 'slide-y');
       else if (fromTabIndex < toTabIndex)
         $store.commit('appshell/setRouterTransition', 'slide-left');

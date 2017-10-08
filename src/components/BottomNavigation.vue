@@ -1,6 +1,6 @@
 <template>
-  <v-bottom-nav :value="$route.meta.level === 0"
-                :active.sync="currentTab" class="transparent">
+  <v-bottom-nav :value="$route.meta.level === 0" fixed
+                :active.sync="currentTab" class="white">
     <v-btn v-for="tab in tabs"
            :key="tab.path"
            flat class="primary--text" :value="tab.route">
@@ -17,7 +17,7 @@
         tabs: [
           {text: '首页', icon: 'home', route: 'home'},
           {text: '我的票夹', icon: 'collections_bookmark', route: 'ticket'},
-          {text: '账号', icon: 'account_circle', route: 'account'}
+          {text: '账户', icon: 'account_circle', route: 'account'}
         ],
       };
     },
@@ -33,3 +33,8 @@
     }
   }
 </script>
+
+<style lang="stylus">
+  .bottom-navigation
+    z-index 2
+</style>

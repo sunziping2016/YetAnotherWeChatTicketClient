@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    persistent light enable-resize-watcher
+    persistent light enable-resize-watcher touchless
     :mini-variant.sync="mini" v-model="drawer" overflow>
     <v-list three-line>
       <v-list-tile avatar tag="div">
@@ -25,6 +25,22 @@
         </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>主页</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile exact to="/ticket" @click.native.stop>
+        <v-list-tile-action>
+          <v-icon>collections_bookmark</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>我的票夹</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile exact to="/account" @click.native.stop>
+        <v-list-tile-action>
+          <v-icon>account_circle</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>账号</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
@@ -64,11 +80,6 @@
 <style lang="stylus">
   .avatar .fa-icon
     color rgba(0,0,0,0.54)!important
-  @media (max-width: 1424px) and (orientation: landscape)
-    .navigation-drawer--mini-variant {
-      margin-top: 64px!important;
-      max-height: calc(100vh - 64px)!important;
-    }
   .clickable
     cursor pointer
 </style>

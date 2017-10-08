@@ -15,7 +15,8 @@ const proxyOption = {
 };
 const proxyTable = {
   '/api': proxyOption,
-  '/uploads': proxyOption
+  '/uploads': proxyOption,
+  '/socket.io': proxyOption
 };
 
 let app = express();

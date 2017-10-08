@@ -1,4 +1,6 @@
 const state = {
+  title: '',
+
   drawer: window.innerWidth > 1024,
   drawerMini: false,
 
@@ -7,12 +9,18 @@ const state = {
 
   bottomNavigation: true,
 
-  windowSize: [window.innerWidth, window.innerHeight],
+  // 0: not show, 1: confirmation, 2: promotion
+  bindWechatDialog: 0,
+
+  breakpoint: {},
 
   routerTransition: 'slide-y'
 };
 
 const mutations = {
+  setTitle(state, value) {
+    state.title = value || '';
+  },
   setDrawer(state, value) {
     state.drawer = value;
   },
@@ -33,13 +41,17 @@ const mutations = {
   popSnackbarMessage(state) {
     state.snackbarMessages.splice(0, 1);
   },
-  updateWindowSize(state, size) {
-    state.windowSize = size
+  updateBreakpoint(state, value) {
+    state.breakpoint = value;
   },
   setRouterTransition(state, transition) {
     state.routerTransition = transition;
+  },
+  setBindWechatDialog(state, value) {
+    state.bindWechatDialog = value;
   }
 };
+
 
 export default {
   namespaced: true,

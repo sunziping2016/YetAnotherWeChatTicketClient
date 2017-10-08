@@ -60,7 +60,7 @@ let webpackConfig = merge(baseWebpackConfig, {
       }
     ]),
     new SWPrecacheWebpackPlugin({
-      cacheId: 'sw-cache-blog-client2',
+      cacheId: 'sw-cache-wxticket',
       filename: 'service-worker.js',
       staticFileGlobs: [],
       staticFileGlobsIgnorePatterns: [
@@ -78,8 +78,14 @@ let webpackConfig = merge(baseWebpackConfig, {
         {
           urlPattern: /^https?:\/\/fonts\.googleapis\.com\//,
           handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /^https?:\/\/res\.wx\.qq\.com\//,
+          handler: 'cacheFirst'
         }
       ],
+      ignoreUrlParametersMatching: [/./],
+      verbose: true
     }),
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',

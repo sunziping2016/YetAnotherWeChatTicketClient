@@ -5,6 +5,7 @@ import App from './App.vue';
 import components from './components';
 import router from './pages';
 import store from './store';
+import { sync } from 'vuex-router-sync';
 
 
 // Install service-worker
@@ -28,34 +29,81 @@ if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
     });
 }
 
-// Emojify
-emojify.setConfig({
-  mode: 'img',
-  img_dir: '//cdn.bootcss.com/emojify.js/1.1.0/images/basic',
-  ignore_emoticons: true
-});
-
-
 Vue.use(Vuetify);
+sync(store, router);
 Object.keys(components).forEach(x => Vue.component(x, components[x]));
 
 let app = new Vue({
   router,
   store,
+  data: {
+    title: "紫荆之声"
+  },
   methods: {
     updateTitle() {
-    },
+      let metaTitle = this.$store.state.route.meta.title;
+      if (metaTitle)
+        document.title = metaTitle  + ' - ' + this.title;
+      else
+        document.title = this.title;
+    }
   },
-  computed: {
+  mounted() {
+    store.dispatch('auth/byToken', this.$route.query.token).catch(error => {
+      if (error.type === 'EAUTH')
+        store.commit('appshell/addSnackbarMessage', '验证信息错误');
+      else {
+        console.error(error);
+        store.commit('appshell/addSnackbarMessage', error.message);
+      }
+    }).then(() => {
+      const action = this.$route.query.action;
+      if (this.$route.query.token || action) {
+        const newQuery = Object.assign({}, this.$route.query);
+        delete newQuery.token;
+        delete newQuery.action;
+        router.replace({path: this.$route.path, query: newQuery});
+      }
+      if (action) {
+        switch (action) {
+          case 'bind-wechat':
+            const token = this.$store.state.auth.token;
+            if (token.uid && token.wid)
+              this.$store.dispatch('auth/bindWechat', {
+                user: token.uid,
+                wechatUser: token.wid
+              }).then(() => {
+                store.commit('appshell/addSnackbarMessage', '成功绑定微信！');
+              }).catch((err) => {
+                console.error(err);
+                store.commit('appshell/addSnackbarMessage', '绑定微信失败');
+              });
+            else
+              store.commit('appshell/addSnackbarMessage', '登录失败');
+            break;
+        }
+      }
+    });
   },
   mixins: [App]
 });
 
-window.addEventListener('resize', function () {
-  app.$store.commit('appshell/updateWindowSize', [
-    window.innerWidth,
-    window.innerHeight
-  ]);
+router.onReady(()=> app.$mount('#app'));
+
+router.beforeEach((to, from, next) => {
+  if (window.scrollY !== 0)
+    window.scrollTo(window.scrollX, 0);
+  next();
 });
 
-app.$mount('#app');
+router.afterEach((to, from) => {
+  app.updateTitle();
+});
+
+// Detect wechat
+if (typeof WeixinJSBridge === 'object')
+  store.commit('global/setWechat', true);
+else
+  document.addEventListener("WeixinJSBridgeReady", function() {
+    store.commit('global/setWechat', true);
+  });
