@@ -1,9 +1,9 @@
 <template>
   <v-container class="xs-pa-0">
     <v-layout column>
-      <v-flex  v-if="!!user"
-               xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
-        <v-card :style="cardStyle">
+      <v-flex v-if="user"
+              xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
+        <v-card class="xs-fullscreen">
           <v-list subheader>
             <v-subheader>概览</v-subheader>
             <v-list-tile avatar class="file-input"
@@ -21,7 +21,7 @@
                      accept="image/png,image/gif,image/jpeg"
                      @change="onUpdateAvatar">
             </v-list-tile>
-            <v-list-tile @click="">
+            <v-list-tile @click="onBindTsinghua">
               <v-list-tile-content class="label">
                 <p>学生信息</p>
               </v-list-tile-content>
@@ -41,7 +41,7 @@
                 <p>{{user.wechatId ? '解除绑定' : '未绑定'}}</p>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile @click="">
+            <v-list-tile @click="onBindEmail">
               <v-list-tile-content class="label">
                 <p>邮箱</p>
               </v-list-tile-content>
@@ -133,9 +133,9 @@
                 </p>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile class="logout-btn"
-                         large block>
-              <v-btn @click="onLogout">
+            <v-list-tile class="logout-btn white--text">
+              <v-btn large block
+                @click="onLogout">
                 退出登录
               </v-btn>
             </v-list-tile>
@@ -155,22 +155,14 @@
 <script>
   export default {
     computed: {
-      cardStyle() {
-        if (this.$store.state.appshell.breakpoint.xs)
-          return {
-            // header 56px, footer 56px
-            'min-height': 'calc(100vh - 56px)'
-          };
-        return {};
-      },
       user() {
         return this.$store.getters['auth/user']
       },
       role() {
         const roleMap = {
-          'User': '普通用户',
-          'Publisher': '发布者',
-          'Administrator': '管理员'
+          'user': '普通用户',
+          'publisher': '发布者',
+          'administrator': '管理员'
         };
         if (this.user)
           return this.user.roles.map(r => roleMap[r]).join(', ')
@@ -191,8 +183,8 @@
           this.$store.commit('appshell/addSnackbarMessage', '未知的图片格式!');
           return;
         }
-        if (file.size > 1024 * 1024) {
-          this.$store.commit('appshell/addSnackbarMessage', '图片大小必须小于1M!');
+        if (file.size > 5 * 1024 * 1024) {
+          this.$store.commit('appshell/addSnackbarMessage', '图片大小必须小于5M!');
           return;
         }
         this.$store.dispatch('users/patch', {
@@ -210,6 +202,14 @@
       },
       onBindWechat() {
         this.$store.commit('appshell/setBindWechatDialog', 1);
+      },
+      onBindTsinghua() {
+        if (!this.user.studentId)
+          this.$router.push('/account/info/bind-tsinghua');
+      },
+      onBindEmail() {
+        if (!this.user.email)
+          this.$router.push('/account/info/bind-email');
       }
     }
   };
@@ -239,7 +239,6 @@
   .logout-btn button
       flex-grow 1
       max-width 300px
-      color rgb(255, 255, 255)!important
       background-color rgb(255, 82, 82)!important
 </style>
 

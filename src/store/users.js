@@ -31,12 +31,13 @@ const actions = {
   async patch({commit}, user) {
     const headers = {
       'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
-    };
+    }, id = user._id;
+    delete user._id;
     if (user.avatar) {
       headers['Content-Type'] = 'multipart/form-data';
       user = objectToFormData(user);
     }
-    let response = await throwOnError(axios().patch('/api/user/', user, {
+    let response = await throwOnError(axios().patch('/api/user/' + id, user, {
       headers
     }));
     if (response)

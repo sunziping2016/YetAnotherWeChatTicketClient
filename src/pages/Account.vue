@@ -1,11 +1,11 @@
 <template>
-  <v-container class="xs-pa-0"
-               v-touch="swipeAction">
+  <v-container class="xs-pa-0">
     <v-layout row>
       <v-flex xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
-        <v-card :style="cardStyle">
+        <v-card class="xs-fullscreen-withnav">
           <v-list>
-            <v-list-tile class="account-header" exact :to="user ? '/account/info' : '/login'">
+            <v-list-tile class="account-header" exact
+                         :to="user ? '/account/info' : '/account/login'">
               <v-avatar size="64px">
                 <img v-if="avatar" :src="avatar" alt="avatar">
                 <icon v-else name="user-circle" scale="4"></icon>
@@ -23,7 +23,7 @@
               </v-list-tile-action>
             </v-list-tile>
             <v-subheader>个人</v-subheader>
-            <v-list-tile v-if="!user" @click="">
+            <v-list-tile v-if="!user" exact to="/account/register">
               <v-list-tile-avatar>
                 <v-icon>person_add</v-icon>
               </v-list-tile-avatar>
@@ -34,7 +34,7 @@
                 <v-icon>keyboard_arrow_right</v-icon>
               </v-list-tile-action>
             </v-list-tile>
-            <v-list-tile v-if="!!user" @click="">
+            <v-list-tile v-if="user && !user.wechatId" @click.stop="onBindWechat">
               <v-list-tile-avatar>
                 <v-icon>compare_arrows</v-icon>
               </v-list-tile-avatar>
@@ -45,19 +45,7 @@
                 <v-icon>keyboard_arrow_right</v-icon>
               </v-list-tile-action>
             </v-list-tile>
-            <v-divider :inset="true"></v-divider>
-            <v-list-tile @click="">
-              <v-list-tile-avatar>
-                <v-icon>restore</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>忘记密码</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-divider :inset="true"></v-divider>
+            <v-divider v-if="user && !user.wechatId" :inset="true"></v-divider>
             <v-list-tile @click="">
               <v-list-tile-avatar>
                 <v-icon>settings</v-icon>
@@ -103,26 +91,7 @@
 <script>
   import 'vue-awesome/icons/user-circle';
   export default {
-    data() {
-      return {
-        swipeAction: {
-          right: () => {
-            if (this.$store.state.appshell.breakpoint.xs)
-              this.$router.push('/ticket');
-          }
-        }
-      };
-    },
     computed: {
-      cardStyle() {
-        if (this.$store.state.appshell.breakpoint.xs)
-          return {
-            // header 56px, footer 56px
-            'min-height': 'calc(100vh - 56px)',
-            'padding-bottom': '56px'
-          };
-        return {};
-      },
       user() {
         return this.$store.getters['auth/user']
       },
@@ -133,6 +102,11 @@
         return this.$store.getters['auth/avatarThumbnail'];
       }
     },
+    methods: {
+      onBindWechat() {
+        this.$store.commit('appshell/setBindWechatDialog', 1);
+      }
+    }
   };
 </script>
 

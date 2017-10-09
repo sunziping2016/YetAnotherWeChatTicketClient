@@ -57,18 +57,23 @@ let app = new Vue({
         store.commit('appshell/addSnackbarMessage', error.message);
       }
     }).then(() => {
-      const action = this.$route.query.action;
-      if (this.$route.query.token || action) {
+      const action = this.$route.query.action,
+        sessToken = this.$route.query.token,
+        userToken = this.$route.query['user-token'];
+      if (userToken)
+        store.commit('global/setUserToken', userToken);
+      if (action || sessToken || userToken) {
         const newQuery = Object.assign({}, this.$route.query);
         delete newQuery.token;
         delete newQuery.action;
+        delete newQuery['user-token'];
         router.replace({path: this.$route.path, query: newQuery});
       }
       if (action) {
+        const token = this.$store.state.auth.token;
         switch (action) {
           case 'bind-wechat':
-            const token = this.$store.state.auth.token;
-            if (token.uid && token.wid)
+            if (token && token.uid && token.wid)
               this.$store.dispatch('auth/bindWechat', {
                 user: token.uid,
                 wechatUser: token.wid
@@ -79,8 +84,24 @@ let app = new Vue({
                 store.commit('appshell/addSnackbarMessage', '绑定微信失败');
               });
             else
-              store.commit('appshell/addSnackbarMessage', '登录失败');
+              store.commit('appshell/addSnackbarMessage', '绑定微信失败');
             break;
+          case 'patch-user':
+            if (token && token.uid && userToken)
+              store.dispatch('users/patch', {
+                _id: token.uid,
+                token: userToken
+              }).then(() => {
+                store.commit('appshell/addSnackbarMessage', '成功绑定邮箱！');
+              }).catch((err) => {
+                console.error(err);
+                store.commit('appshell/addSnackbarMessage', '绑定邮箱失败');
+              });
+            else
+              store.commit('appshell/addSnackbarMessage', '绑定邮箱失败');
+            break;
+          default:
+            store.commit('global/setAction', action);
         }
       }
     });

@@ -1,5 +1,5 @@
 <template>
-  <v-container v-touch="swipeAction">
+  <v-container>
     <v-layout row justify-space-around>
       <h2>我的票夹</h2>
     </v-layout>
@@ -7,20 +7,5 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        swipeAction: {
-          left: () => {
-            if (this.$store.state.appshell.breakpoint.xs)
-              this.$router.push('/account');
-          },
-          right: () => {
-            if (this.$store.state.appshell.breakpoint.xs)
-              this.$router.push('/');
-          }
-        }
-      };
-    }
-  }
+  export default {}
 </script>

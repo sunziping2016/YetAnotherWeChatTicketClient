@@ -14,7 +14,9 @@ const state = {
 
   isWechat: false,
 
-  wechatAppid: null
+  wechatAppid: null,
+  action: null,
+  userToken: null
 };
 
 const mutations = {
@@ -25,6 +27,12 @@ const mutations = {
     state.site = site;
     setAxios(site);
     setSocket(site);
+  },
+  setAction(state, value) {
+    state.action = value;
+  },
+  setUserToken(state, value) {
+    state.userToken = value;
   }
 };
 

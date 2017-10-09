@@ -86,4 +86,10 @@ export default {
   @media $display-breakpoints.xs-only
     .xs-pa-0
       padding 0
+    .xs-fullscreen
+      min-height calc(100vh - 56px)
+    .xs-fullscreen-withnav
+      min-height calc(100vh - 56px)
+      padding-bottom 56px
+
 </style>

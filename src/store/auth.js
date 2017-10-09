@@ -70,8 +70,11 @@ const actions = {
     updateAuthData(commit, response);
     return response;
   },
-  sendValidationEmail(_, payload) {
+  sendEmail(_, payload) {
     return throwOnError(axios().post('/api/auth/email', payload));
+  },
+  validateTsinghua(_, payload) {
+    return throwOnError(axios().post('/api/auth/tsinghua', payload));
   },
   bindWechat(_, payload) {
     return throwOnError(axios().post('/api/auth/bind', payload, {

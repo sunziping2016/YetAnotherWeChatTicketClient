@@ -10,6 +10,9 @@ const NotFound = () => import('./NotFound.vue');
 const Activity = () => import('./Activity.vue');
 const AccountInfo = () => import('./AccountInfo.vue');
 const Login = () => import('./Login.vue');
+const SetPassword = () => import('./SetPassword.vue');
+const BindTsinghua = () => import('./BindTsinghua.vue');
+const BindEmail = () => import('./BindEmail.vue');
 
 Vue.use(Router);
 
@@ -67,11 +70,51 @@ const router = new Router({
       }
     },
     {
-      path: '/login',
+      path: '/account/info/bind-tsinghua',
+      name: 'bindTsinghua',
+      component: BindTsinghua,
+      meta: {
+        title: '绑定清华账号',
+        level: 2,
+        back: {name: 'accountInfo'}
+      }
+    },
+    {
+      path: '/account/info/bind-email',
+      name: 'bindEmail',
+      component: BindEmail,
+      meta: {
+        title: '绑定清华邮箱',
+        level: 2,
+        back: {name: 'accountInfo'}
+      }
+    },
+    {
+      path: '/account/login',
       name: 'login',
       component: Login,
       meta: {
         title: '登录',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/account/register',
+      name: 'register',
+      component: Register,
+      meta: {
+        title: '注册',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/account/set-password',
+      name: 'setPassword',
+      component: SetPassword,
+      meta: {
+        title: '设置密码',
         level: 1,
         back: {name: 'account'}
       }
@@ -82,16 +125,6 @@ const router = new Router({
       component: Help,
       meta: {
         title: '帮助',
-        level: 1,
-        back: {name: 'account'}
-      }
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: Register,
-      meta: {
-        title: '注册',
         level: 1,
         back: {name: 'account'}
       }

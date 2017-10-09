@@ -2,7 +2,7 @@
   <v-container class="xs-pa-0">
     <v-layout row>
       <v-flex xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
-        <v-card :style="cardStyle">
+        <v-card class="xs-fullscreen">
           <v-card-text class="pa-4">
             <v-layout class="banner" align-center justify-center>
               <img src="/static/img/icons/android-chrome-192x192.png" alt="logo">
@@ -30,11 +30,13 @@
               required
             ></v-text-field>
             <p><small>* 密码是紫荆之声的密码，不是info密码。</small></p>
-            <v-btn class="login-btn" primary large block
-                   :disabled="!formValid"
-                   :loading="verifying"
-                   @click.native="onLogin"
-            >登录</v-btn>
+            <v-layout justify-center>
+              <v-btn class="login-btn" primary large block
+                     :disabled="!formValid"
+                     :loading="verifying"
+                     @click.native="onLogin"
+              >登录</v-btn>
+            </v-layout>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -55,14 +57,6 @@
       }
     },
     computed: {
-      cardStyle() {
-        if (this.$store.state.appshell.breakpoint.xs)
-          return {
-            // header 56px, footer 56px
-            'min-height': 'calc(100vh - 56px)',
-          };
-        return {};
-      },
       formValid() {
         return !this.verifying && this.username && this.password &&
           !this.usernameError && !this.passwordError;
@@ -78,6 +72,8 @@
       password() {
         if (this.password.length === 0)
           this.passwordError = '密码不能为空';
+        else if (this.password.length < 8)
+          this.passwordError = '密码长度至少8位';
         else
           this.passwordError = null;
       }
@@ -125,7 +121,7 @@
 
 <style lang="stylus" scoped>
   .banner
-    margin 20px
+    margin 0 0 24px
     img
       width 100px
       height auto
@@ -138,5 +134,5 @@
 
   .login-btn
     max-width 300px
-    margin 6px auto
+    margin 6px
 </style>
