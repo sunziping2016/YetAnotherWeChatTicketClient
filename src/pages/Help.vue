@@ -22,3 +22,8 @@
   </v-container>
 </template>
 
+<script>
+  export default {
+    name: 'help'
+  };
+</script>

@@ -82,6 +82,10 @@ let webpackConfig = merge(baseWebpackConfig, {
         {
           urlPattern: /^https?:\/\/res\.wx\.qq\.com\//,
           handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /^https?:\/\/wx\.szp15\.cn\/.*\.(jpeg|png|gif|html|css|js)+$/,
+          handler: 'cacheFirst'
         }
       ],
       ignoreUrlParametersMatching: [/./],

@@ -1,9 +1,13 @@
 #!/usr/bin/env sh
 
+
 current_dir=$(dirname "$0")
-targets="$current_dir/../../WeChatTicketServer/public" #"szp15.cn:/srv/http/wx.szp15.cn"
+pushd "$current_dir"
+targets="../../WeChatTicketServer/public szp15.cn:/srv/http/wxtickets"
 
 for target in $targets; do
-  rsync -avh "$current_dir/../dist/" --exclude="service-worker.js" $target
-  rsync -avh "$current_dir/../dist/service-worker.js" $target
+  rsync -avh "../dist/" --exclude="service-worker.js" $target
+  rsync -avh "../dist/service-worker.js" $target
 done
+node emitter newVersion
+popd

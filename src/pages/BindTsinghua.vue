@@ -10,7 +10,7 @@
               label="用户名或学号"
               type="text"
               :value="user.username"
-              disabled
+              readonly
             ></v-text-field>
             <v-text-field
               label="密码"
@@ -46,6 +46,7 @@
 
 <script>
   export default {
+    name: 'bindTsinghua',
     data() {
       return {
         password: '',

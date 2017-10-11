@@ -13,6 +13,7 @@ const Login = () => import('./Login.vue');
 const SetPassword = () => import('./SetPassword.vue');
 const BindTsinghua = () => import('./BindTsinghua.vue');
 const BindEmail = () => import('./BindEmail.vue');
+const CreateActivity = () => import('./CreateActivity.vue');
 
 Vue.use(Router);
 
@@ -120,11 +121,21 @@ const router = new Router({
       }
     },
     {
-      path: '/help',
+      path: '/admin/create-activity',
+      name: 'createActivity',
+      component: CreateActivity,
+      meta: {
+        title: '创建活动',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/account/help',
       name: 'help',
       component: Help,
       meta: {
-        title: '帮助',
+        title: '新手指南',
         level: 1,
         back: {name: 'account'}
       }

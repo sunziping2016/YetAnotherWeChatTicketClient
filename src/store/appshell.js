@@ -5,6 +5,7 @@ const state = {
   drawerMini: false,
 
   snackbar: false,
+  snackbarAnimating: false,
   snackbarMessages: [],
 
   bottomNavigation: true,
@@ -32,6 +33,9 @@ const mutations = {
   },
   setSnackbar(state, value) {
     state.snackbar = value;
+  },
+  setSnackbarAnimating(state, value) {
+    state.snackbarAnimating = value;
   },
   addSnackbarMessage(state, message) {
     if (typeof message !== 'object')

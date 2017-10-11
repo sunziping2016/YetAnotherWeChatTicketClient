@@ -5,6 +5,22 @@ import {setAxios, setSocket, throwOnError, axios} from "./utils";
 export const sioHandlers = {
   '*': function (event, data) {
     console.log(event, data);
+  },
+  'newVersion': function () {
+    this.commit('appshell/addSnackbarMessage', {
+      content: '检测到有新版本是否更新？',
+      actionText: '更新',
+      callback() {
+        if (navigator.serviceWorker !== undefined && window.location.protocol === 'https:') {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => {
+              reg.update();
+            }).catch(function (e) {
+              console.error('Error during service worker registration:', e);
+            });
+        }
+      }
+    });
   }
 };
 

@@ -8,27 +8,6 @@ import store from './store';
 import { sync } from 'vuex-router-sync';
 
 
-// Install service-worker
-if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(function (registration) {
-      registration.onupdatefound = function () {
-        if (navigator.serviceWorker.controller) {
-          const installingWorker = registration.installing;
-
-          installingWorker.onstatechange = function () {
-            switch (installingWorker.state) {
-              case 'redundant':
-                throw new Error('The installing service worker became redundant.');
-            }
-          };
-        }
-      };
-    }).catch(function (e) {
-      console.error('Error during service worker registration:', e);
-    });
-}
-
 Vue.use(Vuetify);
 sync(store, router);
 Object.keys(components).forEach(x => Vue.component(x, components[x]));
@@ -112,8 +91,8 @@ let app = new Vue({
 router.onReady(()=> app.$mount('#app'));
 
 router.beforeEach((to, from, next) => {
-  if (window.scrollY !== 0)
-    window.scrollTo(window.scrollX, 0);
+  //if (window.scrollY !== 0)
+  //  window.scrollTo(window.scrollX, 0);
   next();
 });
 
@@ -128,3 +107,32 @@ else
   document.addEventListener("WeixinJSBridgeReady", function() {
     store.commit('global/setWechat', true);
   });
+
+// Install service-worker
+if (navigator.serviceWorker !== undefined && window.location.protocol === 'https:') {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(reg => {
+      reg.addEventListener('updatefound', () => {
+        if (navigator.serviceWorker.controller) {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            switch (newWorker.state) {
+              case 'installed':
+                app.$store.commit('appshell/addSnackbarMessage', {
+                  content: '已更新至最新版本, 请刷新页面',
+                  actionText: '刷新',
+                  callback() {
+                    window.location.reload();
+                  }
+                });
+                break;
+              case 'redundant':
+                throw new Error('The installing service worker became redundant.');
+            }
+          });
+        }
+      });
+    }).catch(function (e) {
+    console.error('Error during service worker registration:', e);
+  });
+}

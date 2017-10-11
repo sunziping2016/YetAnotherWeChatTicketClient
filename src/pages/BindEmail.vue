@@ -49,6 +49,7 @@
 
 <script>
   export default {
+    name: 'bindEmail',
     data() {
       return {
         emailServer: 'mails.tsinghua.edu.cn',

@@ -39,6 +39,7 @@
 
 <script>
   export default {
+    name: 'setPassword',
     data() {
       return {
         password: '',

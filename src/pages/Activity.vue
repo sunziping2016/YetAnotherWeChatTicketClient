@@ -12,7 +12,7 @@
               <img id="activity_main_image" :src="activity.mainImage">
               <figcaption id="title_area">
                 <p class="time" id="small_title">Tsinghua University</p>
-                <h1 id="activity_title">{{activity.title}}</h1>
+                <h1 id="activity_title">{{activity.name}}</h1>
                 <div class="bars">
                   <img src="/static/imgs/clock.png" id="clock_image">
                   <span id="ticket_getting">抢票倒计时:<br>　　23小时44分53.3秒</span>
@@ -53,19 +53,19 @@
 
 <script>
   export default {
+    name: 'activity',
     data() {
       return {
         activity: {
+          name: '新年音乐会',
           beginTime: 12312312321,
           endTime: 12312412321,
           bookBeginTime: Date.now() + 86400000,
           bookEndTime: Date.now() + 96400000,
-          title: '新年音乐会',
-          seatType: 1,
           description: "　　这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是清   华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大学 的新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年   音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会 。这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是   清华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会。这是清华大 学的新年音乐会。这是清华大学的  新年音乐会。这是清华大学的新年音乐会。这是清华大学的新年音乐会。",
           mainImage: 'http://c.hiphotos.baidu.com/baike/c0%3Dbaike92%2C5%2C5%2C92%2C30/sign=1b08a857b13533fae1bb9b7cc9ba967a/8601a18b87d6277f9cff136128381f30e824fcfd.jpg',
           titleImage: 'http://ssast.org/static/images/slider1.jpg',
-          tickets: 12362,
+          totalTickets: 12362,
           soldTickets: 0,
           place: '新清华学堂'
         },

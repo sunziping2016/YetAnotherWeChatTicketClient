@@ -4,6 +4,8 @@ import AppDrawer from './AppDrawer.vue';
 import BottomNavigation from './BottomNavigation.vue';
 import Icon from 'vue-awesome/components/Icon.vue';
 import BindWechatDialog from './BindWechatDialog.vue';
+import DateTimePickle from './DateTimePickle.vue';
+import FileField from './FileField.vue';
 
 export default {
   'icon': Icon,
@@ -11,5 +13,7 @@ export default {
   'app-snackbar': AppSnackbar,
   'app-drawer': AppDrawer,
   'bottom-navigation': BottomNavigation,
-  'bind-wechat-dialog': BindWechatDialog
+  'bind-wechat-dialog': BindWechatDialog,
+  'date-time-pickle': DateTimePickle,
+  'file-field': FileField
 };

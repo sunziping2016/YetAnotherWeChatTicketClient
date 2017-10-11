@@ -6,12 +6,16 @@
         <v-card class="xs-fullscreen">
           <v-list subheader>
             <v-subheader>概览</v-subheader>
-            <v-list-tile avatar class="file-input"
+            <v-list-tile avatar
                          @click="$refs['avatar-input'].click()">
               <v-list-tile-content class="label">
                 <p>头像</p>
               </v-list-tile-content>
-              <v-list-tile-content v-if="!avatar" class="value editable">
+              <v-list-tile-avatar v-if="uploading">
+                <v-progress-circular indeterminate>
+                </v-progress-circular>
+              </v-list-tile-avatar>
+              <v-list-tile-content v-else-if="!avatar" class="value editable">
                 <p>未设置</p>
               </v-list-tile-content>
               <v-list-tile-avatar v-else>
@@ -154,6 +158,12 @@
 
 <script>
   export default {
+    name: 'accountInfo',
+    data() {
+      return {
+        uploading: false
+      };
+    },
     computed: {
       user() {
         return this.$store.getters['auth/user']
@@ -165,7 +175,7 @@
           'administrator': '管理员'
         };
         if (this.user)
-          return this.user.roles.map(r => roleMap[r]).join(', ')
+          return this.user.roles.map(r => roleMap[r]).join('，')
       },
       wechatUser() {
         return this.$store.getters['auth/wechatUser'];
@@ -176,6 +186,8 @@
     },
     methods: {
       onUpdateAvatar(event) {
+        if (this.uploading)
+          return;
         const file = this.$refs['avatar-input'].files[0];
         if (!file)
           return;
@@ -187,12 +199,15 @@
           this.$store.commit('appshell/addSnackbarMessage', '图片大小必须小于5M!');
           return;
         }
+        this.uploading = true;
         this.$store.dispatch('users/patch', {
           _id: this.user._id,
           avatar: file
         }).catch(err => {
           console.error(err);
           this.$store.commit('appshell/addSnackbarMessage', err.message);
+        }).then(() => {
+          this.uploading = false;
         });
       },
       onLogout() {
@@ -226,15 +241,8 @@
     &.editable
       color #1976d2
 
-  .file-input
-    position relative
-    input
-      visibility hidden
-      position absolute
-      width 100%
-      height 100%
-      margin-left -16px
-      pointer-events none
+  input[type=file]
+    display none
 
   .logout-btn button
       flex-grow 1

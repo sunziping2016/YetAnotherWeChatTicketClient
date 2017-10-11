@@ -8,10 +8,10 @@
                     centered v-model="verifyTab">
               <v-tabs-bar class="white verify-tabs-bar">
                 <v-tabs-item href="#verify-by-email" ripple>
-                  邮箱验证
+                  邮箱注册
                 </v-tabs-item>
                 <v-tabs-item href="#verify-by-id" ripple>
-                  学生清华验证
+                  学生清华注册
                 </v-tabs-item>
                 <v-tabs-slider class="primary"></v-tabs-slider>
               </v-tabs-bar>
@@ -125,6 +125,7 @@
 
 <script>
   export default {
+    name: 'register',
     data() {
       return {
         emailServer: 'mails.tsinghua.edu.cn',

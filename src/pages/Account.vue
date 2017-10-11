@@ -57,8 +57,20 @@
                 <v-icon>keyboard_arrow_right</v-icon>
               </v-list-tile-action>
             </v-list-tile>
+            <v-subheader v-if="isAdmin || isPublisher">管理</v-subheader>
+            <v-list-tile v-if="isAdmin || isPublisher" exact to="/admin/create-activity">
+              <v-list-tile-avatar>
+                <v-icon>note_add</v-icon>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>创建活动</v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-icon>keyboard_arrow_right</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
             <v-subheader>帮助</v-subheader>
-            <v-list-tile @click="">
+            <v-list-tile exact to="/account/help">
               <v-list-tile-avatar>
                 <v-icon>info</v-icon>
               </v-list-tile-avatar>
@@ -91,6 +103,7 @@
 <script>
   import 'vue-awesome/icons/user-circle';
   export default {
+    name: 'account',
     computed: {
       user() {
         return this.$store.getters['auth/user']
@@ -100,6 +113,15 @@
       },
       avatar() {
         return this.$store.getters['auth/avatarThumbnail'];
+      },
+      token() {
+        return this.$store.state.auth.token;
+      },
+      isAdmin() {
+        return this.token && this.token.role && this.token.role & 0b100
+      },
+      isPublisher() {
+        return this.token && this.token.role && this.token.role & 0b10
       }
     },
     methods: {

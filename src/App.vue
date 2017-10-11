@@ -7,7 +7,11 @@
         <transition appear
                     :name="transitionName"
                     :mode="transitionMode">
-          <router-view class="inner-frame"></router-view>
+          <keep-alive
+            include="home">
+            <router-view class="inner-frame"
+            ></router-view>
+          </keep-alive>
         </transition>
       </div>
       <bottom-navigation class="hidden-sm-and-up"></bottom-navigation>
@@ -32,6 +36,7 @@ export default {
       return '';
     }
   },
+  methods: {},
   watch: {
     breakpoint() {
       this.$store.commit('appshell/updateBreakpoint', this.breakpoint);
@@ -46,12 +51,16 @@ export default {
   html
     overflow-y auto!important
 
+  .bg-color
+    background-color #fafafa
+
   .outer-frame
     position relative
   &>.inner-frame
     position absolute
     left 0
     right 0
+    background-color #fafafa
 
   input:-webkit-autofill
     -webkit-box-shadow 0 0 0 30px white inset;
@@ -86,6 +95,8 @@ export default {
   @media $display-breakpoints.xs-only
     .xs-pa-0
       padding 0
+    .xs-pa-2
+      padding 16px
     .xs-fullscreen
       min-height calc(100vh - 56px)
     .xs-fullscreen-withnav

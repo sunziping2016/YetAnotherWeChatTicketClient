@@ -24,7 +24,12 @@ const mutations = {
 
 const actions = {
   async create({commit}, user) {
-    let response = await throwOnError(axios().post('/api/user/', user));
+    const headers = {};
+    if (user.avatar) {
+      headers['Content-Type'] = 'multipart/form-data';
+      user = objectToFormData(user);
+    }
+    let response = await throwOnError(axios().post('/api/user/', user, {headers}));
     commit('updateUser', response);
     return response;
   },
