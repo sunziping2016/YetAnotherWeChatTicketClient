@@ -38,7 +38,7 @@
       onInput(){
         const file = this.$refs.input.files[0] || null;
         this.$refs.text.blur();
-        this.$emit('input', file);
+        this.$nextTick(() => this.$emit('input', file));
       }
     }
   };

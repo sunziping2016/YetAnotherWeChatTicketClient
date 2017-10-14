@@ -6,6 +6,7 @@
         <v-card class="xs-fullscreen">
           <v-card-text class="pa-4">
             <p v-if="action === 'create-user'">请设置您账号的初始密码，完成注册。</p>
+            <p v-else>请输入您的新密码，您将被要求重新登录。</p>
             <v-text-field
               label="密码"
               v-model="password"
@@ -39,7 +40,7 @@
 
 <script>
   export default {
-    name: 'setPassword',
+    name: 'password',
     data() {
       return {
         password: '',
@@ -94,6 +95,20 @@
             this.$store.commit('global/setAction', null);
             this.$store.commit('global/setUserToken', null);
             this.$router.push('/account');
+          }).catch((err) => {
+            console.error(err);
+            this.$store.commit('appshell/addSnackbarMessage', err.message);
+          }).then(() => {
+            this.verifying = false;
+          });
+        } else {
+          this.$store.dispatch('users/patch', {
+            _id: this.user._id,
+            password: this.password
+          }).then(() => {
+            this.$store.commit('auth/updateToken');
+            this.$store.commit('appshell/addSnackbarMessage', '请重新登录');
+            this.$router.push('/account/login');
           }).catch((err) => {
             console.error(err);
             this.$store.commit('appshell/addSnackbarMessage', err.message);

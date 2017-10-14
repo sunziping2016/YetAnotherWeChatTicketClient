@@ -10,7 +10,7 @@ export function throwOnError(result) {
       Object.assign(error, err.response.data);
       throw error;
     } else {
-      err.code = err.response.status;
+      err.code = 0;
       err.type = 'EREQUEST';
       throw err;
     }

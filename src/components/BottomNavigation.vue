@@ -15,8 +15,8 @@
     data () {
       return {
         tabs: [
-          {text: '首页', icon: 'home', route: 'home'},
-          {text: '我的票夹', icon: 'collections_bookmark', route: 'ticket'},
+          {text: '近期活动', icon: 'home', route: 'home'},
+          {text: '我的票夹', icon: 'collections_bookmark', route: 'tickets'},
           {text: '账户', icon: 'account_circle', route: 'account'}
         ],
       };

@@ -1,7 +1,8 @@
 <template>
   <v-container class="xs-pa-0">
     <v-layout row>
-      <v-flex xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
+      <v-flex v-if="activity"
+              xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
         <v-card class="xs-fullscreen">
           <v-card-text class="pa-4">
             <v-layout justify-center column>
@@ -34,8 +35,8 @@
                 label="总票数"
                 :min="0"
                 :step="1"
-                v-model="totalTickets"
-                :error-messages="totalTicketsError ? [totalTicketsError] : []"
+                :value="totalTickets"
+                disabled
                 required
               ></v-text-field>
               <v-layout>
@@ -92,7 +93,6 @@
                 accept="image/png,image/gif,image/jpeg"
                 v-model="mainImage"
                 :error-messages="mainImageError ? [mainImageError] : []"
-                required
               >
               </file-field>
               <file-field
@@ -102,9 +102,6 @@
                 :error-messages="titleImageError ? [titleImageError] : []"
               >
               </file-field>
-              <v-checkbox label="是否立即发布"
-                          v-model="published"
-              ></v-checkbox>
               <p>* 为必填项。封面建议是竖向的图片，而题图建议是横向的图片。</p>
               <v-layout justify-center>
                 <v-btn
@@ -113,19 +110,27 @@
                   :disabled="!valid"
                   :loading="verifying"
                   @click.native="onConfirm"
-                >创建</v-btn>
+                >提交修改</v-btn>
               </v-layout>
             </v-layout>
           </v-card-text>
         </v-card>
+      </v-flex>
+      <v-flex v-else class="pa-2">
+        <v-layout justify-space-around>
+          <v-progress-circular indeterminate>
+          </v-progress-circular>
+        </v-layout>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+  import activities from "../store/activities";
+
   export default {
-    name: 'createActivity',
+    name: 'editActivity',
     data() {
       return {
         name: '',
@@ -141,12 +146,10 @@
         excerption: '',
         excerptionError: null,
         totalTickets: '',
-        totalTicketsError: null,
         mainImage: null,
         mainImageError: null,
         titleImage: null,
         titleImageError: null,
-        published: false,
         verifying: false
       };
     },
@@ -164,21 +167,6 @@
           this.placeError = '活动地点不能超过20字';
         else
           this.placeError = null;
-      },
-      totalTickets() {
-        if (this.totalTickets.length === 0)
-          this.totalTicketsError = '活动票数不能为空';
-        else if (!/^\d+$/.test(this.totalTickets))
-          this.totalTicketsError = '活动票数格式不合法';
-        else {
-          const num = parseInt(this.totalTickets);
-          if (num === 0)
-            this.totalTicketsError = '所谓活动，应该要有人参与才对嘛';
-          else if (num > 1e8)
-            this.totalTicketsError = '你这是要开春晚么？';
-          else
-            this.totalTicketsError = null;
-        }
       },
       mainImage() {
         const file = this.mainImage;
@@ -207,49 +195,78 @@
           this.excerptionError = '介绍摘要不能超过100字';
         else
           this.excerptionError = null;
+      },
+      user() {
+        if (this.user)
+          this.fetchActivity();
+      },
+      activity(value, oldValue) {
+        if (value && !oldValue)
+          this.updateActivity();
       }
     },
     computed: {
       valid() {
         return !this.verifying && this.name && !this.nameError &&
-          !this.placeError && this.totalTickets && !this.totalTicketsError &&
-          this.beginTime && this.endTime && this.bookBeginTime && this.bookEndTime &&
-          this.mainImage && !this.excerptionError;
+          !this.placeError &&  this.beginTime && this.endTime &&
+          this.bookBeginTime && this.bookEndTime &&
+          !this.excerptionError;
+      },
+      activity() {
+        return this.$store.state.activities.activities[this.$route.params.id];
+      },
+      user() {
+        return this.$store.getters['auth/user'];
       },
       serverTime() {
         return new Date(this.$store.state.global.serverTime);
       }
     },
+    mounted() {
+      if (this.activity)
+        this.updateActivity();
+      else
+        this.fetchActivity();
+    },
     methods: {
+      fetchActivity() {
+        if (this.user && !this.activity) {
+          this.$store.dispatch('activities/get', this.$route.params.id)
+            .catch(err => {
+              this.$store.commit('appshell/addSnackbarMessage', err.message);
+            });
+        }
+      },
+      updateActivity() {
+        this.totalTickets = String(this.activity.totalTickets);
+        ['name', 'shortName', 'place', 'beginTime', 'endTime', 'bookBeginTime',
+          'bookEndTime', 'description', 'excerption'].forEach(key => {
+          if (this.activity[key])
+            this[key] = this.activity[key];
+        });
+      },
       onConfirm() {
         if (!this.valid)
           return;
         this.verifying = true;
         const data = {
+          _id: this.$route.params.id,
           name: this.name,
-          totalTickets: parseInt(this.totalTickets),
+          shortName: this.shortName,
+          place: this.place,
           beginTime: this.beginTime,
           endTime: this.endTime,
           bookBeginTime: this.bookBeginTime,
           bookEndTime: this.bookEndTime,
-          mainImage: this.mainImage,
-          published: this.published
+          description:  this.description,
+          excerption: this.excerption
         };
-        if (this.shortName)
-          data.shortName = this.shortName;
-        if (this.place)
-          data.place = this.place;
-        if (this.description)
-          data.description = this.description;
-        if (this.excerption)
-          data.excerption = this.excerption;
         if (this.titleImage)
           data.titleImage = this.titleImage;
-        this.$store.dispatch('activities/create', data).then(data => {
-          if (this.published)
-            this.$router.push('/activity/' + data._id);
-          else
-            this.$router.push('/admin/drafts/' + data._id);
+        if (this.mainImage)
+          data.mainImage = this.titleImage;
+        this.$store.dispatch('activities/patch', data).then(() => {
+          this.$router.push('/admin/drafts');
         }).catch(err => {
             console.error(err);
             this.$store.commit('appshell/addSnackbarMessage', err.message);

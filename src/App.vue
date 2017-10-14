@@ -8,7 +8,7 @@
                     :name="transitionName"
                     :mode="transitionMode">
           <keep-alive
-            include="home">
+            include="home,bindEmail,register,drafts">
             <router-view class="inner-frame"
             ></router-view>
           </keep-alive>
@@ -36,7 +36,6 @@ export default {
       return '';
     }
   },
-  methods: {},
   watch: {
     breakpoint() {
       this.$store.commit('appshell/updateBreakpoint', this.breakpoint);
@@ -95,6 +94,8 @@ export default {
   @media $display-breakpoints.xs-only
     .xs-pa-0
       padding 0
+    .xs-pa-1
+      padding 8px
     .xs-pa-2
       padding 16px
     .xs-fullscreen

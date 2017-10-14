@@ -72,10 +72,6 @@ let webpackConfig = merge(baseWebpackConfig, {
       minify: true,
       runtimeCaching: [
         {
-          urlPattern: /^https?:\/\/cdn\.bootcss\.com\//,
-          handler: 'cacheFirst'
-        },
-        {
           urlPattern: /^https?:\/\/fonts\.googleapis\.com\//,
           handler: 'cacheFirst'
         },
@@ -84,7 +80,7 @@ let webpackConfig = merge(baseWebpackConfig, {
           handler: 'cacheFirst'
         },
         {
-          urlPattern: /^https?:\/\/wx\.szp15\.cn\/.*\.(jpeg|png|gif|html|css|js)+$/,
+          urlPattern: /^https?:\/\/wx\.szp15\.cn\/.*\.(jpeg|png|gif|html|css|js)$/,
           handler: 'cacheFirst'
         }
       ],

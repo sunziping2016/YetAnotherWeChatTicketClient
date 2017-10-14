@@ -2,31 +2,37 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 const Home = () => import('./Home.vue');
-const Ticket = () => import('./Ticket.vue');
+const Tickets = () => import('./Tickets.vue');
 const Account = () => import('./Account.vue');
 const Help = () => import('./Help.vue');
+const FAQ = () => import('./FAQ.vue');
 const Register = () => import('./Register.vue');
 const NotFound = () => import('./NotFound.vue');
 const Activity = () => import('./Activity.vue');
 const AccountInfo = () => import('./AccountInfo.vue');
 const Login = () => import('./Login.vue');
-const SetPassword = () => import('./SetPassword.vue');
+const Password = () => import('./Password.vue');
 const BindTsinghua = () => import('./BindTsinghua.vue');
 const BindEmail = () => import('./BindEmail.vue');
+const Settings = () => import('./Settings.vue');
+const Drafts = () => import('./Drafts.vue');
 const CreateActivity = () => import('./CreateActivity.vue');
+const ActivityPreview = () => import('./ActivityPreview.vue');
+const CheckTicket = () => import('./CheckTicket.vue');
+const EditActivity = () => import('./EditActivity.vue');
 
 Vue.use(Router);
 
 
 // tabIndex
 const router = new Router({
-  mode: 'history',
   routes: [
     {
       path: '/(index.html)?',
       name: 'home',
       component: Home,
       meta: {
+        title: '近期活动',
         level: 0,
         tabIndex: 0
       }
@@ -36,16 +42,17 @@ const router = new Router({
       name: 'activity',
       component: Activity,
       meta: {
+        title: '活动详情',
         level: 1,
-        title: '活动',
         back: {name: 'home'}
       }
     },
     {
-      path: '/ticket',
-      name: 'ticket',
-      component: Ticket,
+      path: '/tickets',
+      name: 'tickets',
+      component: Tickets,
       meta: {
+        title: '我的票夹',
         level: 0,
         tabIndex: 1
       }
@@ -111,13 +118,53 @@ const router = new Router({
       }
     },
     {
-      path: '/account/set-password',
-      name: 'setPassword',
-      component: SetPassword,
+      path: '/account/settings',
+      name: 'settings',
+      component: Settings,
+      meta: {
+        title: '消息设置',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/account/password',
+      name: 'password',
+      component: Password,
       meta: {
         title: '设置密码',
         level: 1,
         back: {name: 'account'}
+      }
+    },
+    {
+      path: '/admin/drafts',
+      name: 'drafts',
+      component: Drafts,
+      meta: {
+        title: '我的活动',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/admin/drafts/:id',
+      name: 'activityPreview',
+      component: ActivityPreview,
+      meta: {
+        title: '活动详情',
+        level: 2,
+        back: {name: 'drafts'}
+      }
+    },
+    {
+      path: '/admin/drafts/edit/:id',
+      name: 'editActivity',
+      component: EditActivity,
+      meta: {
+        title: '编辑活动',
+        level: 2,
+        back: {name: 'drafts'}
       }
     },
     {
@@ -126,6 +173,16 @@ const router = new Router({
       component: CreateActivity,
       meta: {
         title: '创建活动',
+        level: 2,
+        back: {name: 'drafts'}
+      }
+    },
+    {
+      path: '/admin/check-ticket',
+      name: 'checkTicket',
+      component: CheckTicket,
+      meta: {
+        title: '开始检票',
         level: 1,
         back: {name: 'account'}
       }
@@ -136,6 +193,16 @@ const router = new Router({
       component: Help,
       meta: {
         title: '新手指南',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/account/faq',
+      name: 'faq',
+      component: FAQ,
+      meta: {
+        title: '常见问题',
         level: 1,
         back: {name: 'account'}
       }

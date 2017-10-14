@@ -22,77 +22,137 @@
                 <v-icon>keyboard_arrow_right</v-icon>
               </v-list-tile-action>
             </v-list-tile>
-            <v-subheader>个人</v-subheader>
-            <v-list-tile v-if="!user" exact to="/account/register">
-              <v-list-tile-avatar>
-                <v-icon>person_add</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>注册</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-list-tile v-if="user && !user.wechatId" @click.stop="onBindWechat">
-              <v-list-tile-avatar>
-                <v-icon>compare_arrows</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>绑定微信</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-divider v-if="user && !user.wechatId" :inset="true"></v-divider>
-            <v-list-tile @click="">
-              <v-list-tile-avatar>
-                <v-icon>settings</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>设置</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-subheader v-if="isAdmin || isPublisher">管理</v-subheader>
-            <v-list-tile v-if="isAdmin || isPublisher" exact to="/admin/create-activity">
-              <v-list-tile-avatar>
-                <v-icon>note_add</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>创建活动</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-subheader>帮助</v-subheader>
-            <v-list-tile exact to="/account/help">
-              <v-list-tile-avatar>
-                <v-icon>info</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>新手指南</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
-            <v-divider :inset="true"></v-divider>
-            <v-list-tile @click="">
-              <v-list-tile-avatar>
-                <v-icon>help</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>常见问题</v-list-tile-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-list-tile-action>
-            </v-list-tile>
+            <div>
+              <v-subheader>个人</v-subheader>
+              <v-list-tile v-if="!user" exact to="/account/register">
+                <v-list-tile-avatar>
+                  <v-icon>person_add</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>注册</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-list-tile v-if="user && !user.wechatId" @click.stop="onBindWechat">
+                <v-list-tile-avatar>
+                  <v-icon>compare_arrows</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>绑定微信</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="!user || user && !user.wechatId" :inset="true"></v-divider>
+              <v-list-tile exact to="/account/settings">
+                <v-list-tile-avatar>
+                  <v-icon>message</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>消息设置</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="user" :inset="true"></v-divider>
+              <v-list-tile v-if="user" exact to="/account/password">
+                <v-list-tile-avatar>
+                  <v-icon>vpn_key</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>修改密码</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+            </div>
+            <div v-if="isAdmin || isPublisher">
+              <v-subheader>管理</v-subheader>
+              <v-list-tile v-if="isPublisher" exact to="/admin/drafts">
+                <v-list-tile-avatar>
+                  <v-icon>event_note</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>我的活动</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="isPublisher" :inset="true"></v-divider>
+              <v-list-tile v-if="isPublisher" exact to="/admin/check-ticket">
+                <v-list-tile-avatar>
+                  <v-icon>playlist_add_check</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>开始检票</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="isAdmin && isPublisher" :inset="true"></v-divider>
+              <v-list-tile v-if="isPublisher" exact to="/admin/users">
+                <v-list-tile-avatar>
+                  <v-icon>supervisor_account</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>管理用户</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="isPublisher" :inset="true"></v-divider>
+              <v-list-tile v-if="isPublisher" exact to="/admin/wechat">
+                <v-list-tile-avatar>
+                  <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center">
+                    <svg version="1.1" viewBox="0 0 1000 1000"
+                         v-html="wechatPath"
+                         style="opacity: 0.54; width: 24px; height: 24px"
+                    >
+                    </svg>
+                  </div>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>管理微信</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+            </div>
+            <div>
+              <v-subheader>帮助</v-subheader>
+              <v-list-tile exact to="/account/help">
+                <v-list-tile-avatar>
+                  <v-icon>info</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>新手指南</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider :inset="true"></v-divider>
+              <v-list-tile exact to="/account/faq">
+                <v-list-tile-avatar>
+                  <v-icon>help</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title>常见问题</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-icon>keyboard_arrow_right</v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+            </div>
           </v-list>
         </v-card>
       </v-flex>
@@ -101,6 +161,7 @@
 </template>
 
 <script>
+  import wechatPath from './wechat-svg-path.txt';
   import 'vue-awesome/icons/user-circle';
   export default {
     name: 'account',
@@ -122,6 +183,9 @@
       },
       isPublisher() {
         return this.token && this.token.role && this.token.role & 0b10
+      },
+      wechatPath() {
+        return wechatPath;
       }
     },
     methods: {

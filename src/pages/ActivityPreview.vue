@@ -41,10 +41,6 @@
                   <span class="value">{{statusString}}</span>
                 </p>
                 <p>
-                  <span class="label">抢票时间:</span>
-                  <span class="value">{{bookTime}}</span>
-                </p>
-                <p>
                   <span class="label">活动时间:</span>
                   <span class="value">{{activityTime}}</span>
                 </p>
@@ -56,16 +52,6 @@
                   <span class="label">活动票数:</span>
                   <span class="value">{{activity.totalTickets}} 张</span>
                 </p>
-                <p>
-                  <span class="label">剩余票数:</span>
-                  <span class="value">{{activity.remainTickets}} 张</span>
-                </p>
-                <v-btn v-if="canBuyTicket && status <= 2"
-                       primary large block
-                       class="buy-ticket-btn"
-                       :click="onBuyTicket"
-                       :disabled="!valid"
-                >抢票</v-btn>
               </div>
               <div class="activity-corner"></div>
               <div class="activity-details">
@@ -112,16 +98,15 @@
     activityStatus, activityStatusString} from './utils';
 
   export default {
-    name: 'activity',
+    name: 'activityPreview',
     data() {
       return {
-        bottomVisible: false,
-        loading: false
+        bottomVisible: false
       };
     },
     computed: {
       activity() {
-        return this.$store.state.activities.activities[this.$route.params.id] || null;
+        return this.$store.state.activities.activities[this.$route.params.id] || null
       },
       activityTime() {
         if (this.activity)
@@ -133,18 +118,8 @@
           return durationToString(this.activity.bookBeginTime, this.activity.bookEndTime);
         return '';
       },
-      bookTime() {
-        if (this.activity)
-          return durationToString(this.activity.bookBeginTime, this.activity.bookEndTime);
-        return '';
-      },
       bookCountingDown() {
-        let countTime;
-        if (this.status < 2)
-          countTime = this.activity.bookBeginTime.getTime();
-        else
-          countTime = this.activity.bookEndTime.getTime();
-        const time = countTime - this.serverTime;
+        const time = this.activity.bookBeginTime.getTime() - this.serverTime;
         if (time > 0)
           return countingDownToString(time);
         return ''
@@ -155,6 +130,9 @@
       ping() {
         return this.$store.state.global.ping;
       },
+      user() {
+        return this.$store.getters['auth/user'];
+      },
       status() {
         if (this.activity)
           return activityStatus(this.activity, new Date(this.serverTime));
@@ -164,20 +142,18 @@
         if (this.status !== null)
           return activityStatusString(this.status);
         return null;
-      },
-      canBuyTicket() {
-        const token = this.$store.state.auth.token;
-        return !!(token && token.role && token.role & 0b001);
-
-      },
-      valid() {
-        return this.canBuyTicket && this.status === 2 && !this.loading;
       }
     },
     watch: {
-      activity() {
+      activity(value, oldValue) {
         if (this.activity)
           this.$nextTick(() => this.onScroll());
+        if (value && !oldValue)
+          this.updateActivity();
+      },
+      user() {
+        if (this.user)
+          this.fetchActivity();
       }
     },
     methods: {
@@ -186,20 +162,28 @@
           return;
         this.bottomVisible = !!this.activity && !(document.body.offsetHeight + window.scrollY + this.$refs.extraInfo.scrollHeight > document.body.scrollHeight);
       },
-      onBuyTicket() {
-        if (!this.valid)
-          return;
-        this.loading = true;
-        setTimeout(() => this.loading = false, 1000);
+      fetchActivity() {
+        if (this.user && !this.activity) {
+          this.$store.dispatch('activities/get', this.$route.params.id)
+            .catch(err => {
+              this.$store.commit('appshell/addSnackbarMessage', err.message);
+            });
+        }
+      },
+      updateActivity() {
+        this.totalTickets = String(this.activity.totalTickets);
+        ['name', 'shortName', 'place', 'beginTime', 'endTime', 'bookBeginTime',
+          'bookEndTime', 'description', 'excerption'].forEach(key => {
+          if (this.activity[key])
+            this[key] = this.activity[key];
+        });
       }
     },
     mounted() {
-      if (!this.activity) {
-        this.$store.dispatch('activities/get', this.$route.params.id)
-          .catch(err => {
-            this.$store.commit('appshell/addSnackbarMessage', err.message);
-          });
-      }
+      if (this.activity)
+        this.updateActivity();
+      else
+        this.fetchActivity();
       if (this.activity)
         this.onScroll();
     }
@@ -250,7 +234,7 @@
   .activity-info
     line-height 1.5em
     padding 13px 0
-    margin 0 20px
+    margin 0 28px
     clear both
     p
       margin 3px
@@ -347,10 +331,6 @@
   @keyframes spin
     100%
       transform rotate(-360deg)
-
-  .buy-ticket-btn
-    max-width 160px
-    margin 12px auto 6px
 
   .fade-enter-active, .fade-leave-active
     transition opacity 1s

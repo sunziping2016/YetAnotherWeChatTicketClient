@@ -11,6 +11,9 @@ const mutations = {
       user.createdAt = new Date(user.createdAt);
     if (typeof user.updatedAt === 'string')
       user.updatedAt = new Date(user.updatedAt);
+    const old = state.users[user.openId];
+    if (old && old.updatedAt.getTime() >= user.updatedAt.getTime())
+      return;
     Vue.set(state.users, user.openId, user);
   },
   deleteUser(state, id) {

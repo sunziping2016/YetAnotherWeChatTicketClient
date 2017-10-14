@@ -12,6 +12,9 @@ const mutations = {
       if (typeof activity[field] === 'string')
         activity[field] = new Date(activity[field]);
     });
+    const old = state.activities[activity._id];
+    if (old && old.updatedAt.getTime() >= activity.updatedAt.getTime())
+      return;
     Vue.set(state.activities, activity._id, activity);
   },
   deleteActivity(state, id) {
@@ -27,7 +30,7 @@ const actions = {
     if (activity.mainImage || activity.titleImage) {
       ['beginTime', 'endTime', 'bookBeginTime', 'bookEndTime']
         .forEach(field => {
-          if (activity[field] !== undefined)
+          if (activity[field])
             activity[field] = activity[field].toISOString();
         });
       headers['Content-Type'] = 'multipart/form-data';
@@ -47,6 +50,43 @@ const actions = {
     }));
     for (let activity of data.results)
       commit('updateActivity', activity);
+    return data;
+  },
+  async get({commit}, id) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    const data = await throwOnError(axios().get('/api/activity/' + id, {
+      headers
+    }));
+    commit('updateActivity', data);
+    return data;
+  },
+  async deleteActivity({commit}, id) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    await throwOnError(axios().delete('/api/activity/' + id, {
+      headers
+    }));
+    commit('deleteActivity', id);
+  },
+  async patch({commit}, activity) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    }, id = activity._id;
+    delete activity._id;
+    if (activity.mainImage || activity.titleImage) {
+      ['beginTime', 'endTime', 'bookBeginTime', 'bookEndTime']
+        .forEach(field => {
+          if (activity[field])
+            activity[field] = activity[field].toISOString();
+        });
+      headers['Content-Type'] = 'multipart/form-data';
+      activity = objectToFormData(activity);
+    }
+    let data = await throwOnError(axios().patch('/api/activity/' + id, activity, {headers}));
+    commit('updateActivity', data);
     return data;
   }
 };

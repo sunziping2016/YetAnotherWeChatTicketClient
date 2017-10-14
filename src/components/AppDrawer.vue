@@ -24,10 +24,10 @@
           <v-icon>home</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
-          <v-list-tile-title>主页</v-list-tile-title>
+          <v-list-tile-title>近期活动</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile exact to="/ticket" @click.native.stop>
+      <v-list-tile exact to="/tickets" @click.native.stop>
         <v-list-tile-action>
           <v-icon>collections_bookmark</v-icon>
         </v-list-tile-action>

@@ -13,9 +13,10 @@ const mutations = {
       user.updatedAt = new Date(user.updatedAt);
     if (typeof user.secureUpdatedAt === 'string')
       user.secureUpdatedAt = new Date(user.secureUpdatedAt);
-    const oldUser = state.users[user._id];
-    if (!oldUser || oldUser.updatedAt.getTime() < user.updatedAt.getTime())
-      Vue.set(state.users, user._id, user);
+    const old = state.users[user._id];
+    if (old && old.updatedAt.getTime() >= user.updatedAt.getTime())
+      return;
+    Vue.set(state.users, user._id, user);
   },
   deleteUser(state, id) {
     Vue.delete(state.users, id)

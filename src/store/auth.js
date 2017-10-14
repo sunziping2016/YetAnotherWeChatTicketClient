@@ -44,9 +44,10 @@ const actions = {
       return null;
     response = await throwOnError(axios().post('/api/auth/', data))
       .catch(err => {
-        if (err.data)
+        console.log(err, err.code, err.type, err.data);
+        if (err.data && err.data.token)
           updateAuthData(commit, err.data);
-        else if (err.type && err.type !== 'EREQUEST')
+        else if (err.type && err.type === 'EAUTH')
           window.localStorage.removeItem('jwt');
         throw err;
       });

@@ -138,7 +138,7 @@
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile class="logout-btn white--text">
-              <v-btn large block
+              <v-btn large block dark
                 @click="onLogout">
                 退出登录
               </v-btn>

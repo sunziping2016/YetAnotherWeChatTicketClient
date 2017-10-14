@@ -7,7 +7,6 @@ import router from './pages';
 import store from './store';
 import { sync } from 'vuex-router-sync';
 
-
 Vue.use(Vuetify);
 sync(store, router);
 Object.keys(components).forEach(x => Vue.component(x, components[x]));
@@ -16,7 +15,8 @@ let app = new Vue({
   router,
   store,
   data: {
-    title: "紫荆之声"
+    title: "紫荆之声",
+    timer: null
   },
   methods: {
     updateTitle() {
@@ -28,6 +28,7 @@ let app = new Vue({
     }
   },
   mounted() {
+    store.dispatch('global/startTimer');
     store.dispatch('auth/byToken', this.$route.query.token).catch(error => {
       if (error.type === 'EAUTH')
         store.commit('appshell/addSnackbarMessage', '验证信息错误');
@@ -91,8 +92,8 @@ let app = new Vue({
 router.onReady(()=> app.$mount('#app'));
 
 router.beforeEach((to, from, next) => {
-  //if (window.scrollY !== 0)
-  //  window.scrollTo(window.scrollX, 0);
+  if (window.scrollY !== 0)
+    window.scrollTo(window.scrollX, 0);
   next();
 });
 
@@ -110,29 +111,29 @@ else
 
 // Install service-worker
 if (navigator.serviceWorker !== undefined && window.location.protocol === 'https:') {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(reg => {
-      reg.addEventListener('updatefound', () => {
-        if (navigator.serviceWorker.controller) {
-          const newWorker = reg.installing;
-          newWorker.addEventListener('statechange', () => {
-            switch (newWorker.state) {
-              case 'installed':
-                app.$store.commit('appshell/addSnackbarMessage', {
-                  content: '已更新至最新版本, 请刷新页面',
-                  actionText: '刷新',
-                  callback() {
-                    window.location.reload();
-                  }
-                });
-                break;
-              case 'redundant':
-                throw new Error('The installing service worker became redundant.');
-            }
-          });
-        }
-      });
-    }).catch(function (e) {
+  navigator.serviceWorker.register('/service-worker.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      if (navigator.serviceWorker.controller) {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          switch (newWorker.state) {
+            case 'installed':
+              app.$store.commit('appshell/addSnackbarMessage', {
+                content: '已更新至最新版本, 请刷新页面',
+                actionText: '刷新',
+                callback() {
+                  window.location.reload();
+                }
+              });
+              break;
+            case 'redundant':
+              throw new Error('The installing service worker became redundant.');
+          }
+        });
+      }
+    });
+  }).catch(function (e) {
     console.error('Error during service worker registration:', e);
   });
 }
+

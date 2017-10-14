@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-layout row justify-space-around>
-      <h2>我的票夹</h2>
+      <h2>常见问题（施工中）</h2>
     </v-layout>
   </v-container>
 </template>
 
 <script>
   export default {
-    name: 'ticket'
-  }
+    name: 'faq'
+  };
 </script>
