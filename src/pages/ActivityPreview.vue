@@ -164,26 +164,15 @@
       },
       fetchActivity() {
         if (this.user && !this.activity) {
-          this.$store.dispatch('activities/get', this.$route.params.id)
-            .catch(err => {
-              this.$store.commit('appshell/addSnackbarMessage', err.message);
-            });
+          this.$store.dispatch('activities/get', this.$route.params.id).catch(err => {
+            console.error(err);
+            this.$store.commit('appshell/addSnackbarMessage', err.message);
+          });
         }
-      },
-      updateActivity() {
-        this.totalTickets = String(this.activity.totalTickets);
-        ['name', 'shortName', 'place', 'beginTime', 'endTime', 'bookBeginTime',
-          'bookEndTime', 'description', 'excerption'].forEach(key => {
-          if (this.activity[key])
-            this[key] = this.activity[key];
-        });
       }
     },
     mounted() {
-      if (this.activity)
-        this.updateActivity();
-      else
-        this.fetchActivity();
+      this.fetchActivity();
       if (this.activity)
         this.onScroll();
     }

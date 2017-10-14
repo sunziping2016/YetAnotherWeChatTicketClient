@@ -1,4 +1,4 @@
-import { axios, throwOnError, objectToFormData } from './utils';
+import {axios, throwOnError, objectToFormData} from './utils';
 import Vue from 'vue';
 
 const state = {
@@ -36,7 +36,7 @@ const actions = {
       headers['Content-Type'] = 'multipart/form-data';
       activity = objectToFormData(activity);
     }
-    let data = await throwOnError(axios().post('/api/activity/', activity, {headers}));
+    const data = await throwOnError(axios().post('/api/activity/', activity, {headers}));
     commit('updateActivity', data);
     return data;
   },

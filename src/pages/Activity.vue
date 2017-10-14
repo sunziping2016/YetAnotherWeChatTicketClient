@@ -60,12 +60,13 @@
                   <span class="label">剩余票数:</span>
                   <span class="value">{{activity.remainTickets}} 张</span>
                 </p>
-                <v-btn v-if="canBuyTicket && status <= 2"
+                <v-btn v-if="isUser && status <= 2"
                        primary large block
                        class="buy-ticket-btn"
-                       :click="onBuyTicket"
+                       @click="onBuyTicket"
                        :disabled="!valid"
-                >抢票</v-btn>
+                       :loading="loading"
+                >{{bought ? '已购票' : '抢票'}}</v-btn>
               </div>
               <div class="activity-corner"></div>
               <div class="activity-details">
@@ -165,13 +166,22 @@
           return activityStatusString(this.status);
         return null;
       },
-      canBuyTicket() {
-        const token = this.$store.state.auth.token;
+      isUser() {
+        const token = this.token;
         return !!(token && token.role && token.role & 0b001);
-
       },
       valid() {
-        return this.canBuyTicket && this.status === 2 && !this.loading;
+        return this.isUser && this.status === 2 && !this.loading && !this.bought;
+      },
+      bought() {
+        if (this.activity && this.token && this.token.uid) {
+          const ticket = this.$store.state.tickets.ticketsByActivity[this.activity._id];
+          return !!(ticket && ticket.owner === this.token.uid);
+        }
+        return false;
+      },
+      token() {
+        return this.$store.state.auth.token;
       }
     },
     watch: {
@@ -190,15 +200,33 @@
         if (!this.valid)
           return;
         this.loading = true;
-        setTimeout(() => this.loading = false, 1000);
+        this.$store.dispatch('tickets/create', {
+          activity: this.activity._id
+        }).then(() => {
+          this.$store.commit('appshell/addSnackbarMessage', '抢票成功！');
+        }).catch(err => {
+          switch (err.message) {
+            case 'One user can only have one ticket':
+              this.$store.commit('appshell/addSnackbarMessage', '您已经抢到此活动票，一人一票');
+              break;
+            case 'Invalid activity':
+              this.$store.commit('appshell/addSnackbarMessage', '抢票失败！');
+              break;
+            default:
+              console.error(err);
+              this.$store.commit('appshell/addSnackbarMessage', err.message);
+          }
+        }).then(() => {
+          this.loading = false;
+        });
       }
     },
     mounted() {
       if (!this.activity) {
-        this.$store.dispatch('activities/get', this.$route.params.id)
-          .catch(err => {
-            this.$store.commit('appshell/addSnackbarMessage', err.message);
-          });
+        this.$store.dispatch('activities/get', this.$route.params.id).catch(err => {
+          console.error(err);
+          this.$store.commit('appshell/addSnackbarMessage', err.message);
+        });
       }
       if (this.activity)
         this.onScroll();

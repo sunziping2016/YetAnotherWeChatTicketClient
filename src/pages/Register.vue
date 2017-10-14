@@ -213,7 +213,7 @@
         this.$store.dispatch('auth/sendEmail', {
           emailUser: this.email,
           emailServer: this.emailServer,
-          to: '/account/set-password?action=create-user',
+          to: '/account/password?action=create-user',
           action: 'register'
         }).then(() => {
           this.verifyingEmailRemainingTime = 60;
