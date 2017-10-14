@@ -8,7 +8,7 @@
                     :name="transitionName"
                     :mode="transitionMode">
           <keep-alive
-            include="home,bindEmail,register,drafts">
+            include="home,bindEmail,register,drafts,tickets">
             <router-view class="inner-frame"
             ></router-view>
           </keep-alive>

@@ -20,9 +20,9 @@ const CreateActivity = () => import('./CreateActivity.vue');
 const ActivityPreview = () => import('./ActivityPreview.vue');
 const CheckTicket = () => import('./CheckTicket.vue');
 const EditActivity = () => import('./EditActivity.vue');
+const Ticket = () => import('./Ticket.vue');
 
 Vue.use(Router);
-
 
 // tabIndex
 const router = new Router({
@@ -55,6 +55,16 @@ const router = new Router({
         title: '我的票夹',
         level: 0,
         tabIndex: 1
+      }
+    },
+    {
+      path: '/ticket/:id',
+      name: 'ticket',
+      component: Ticket,
+      meta: {
+        title: '电子票详情',
+        level: 1,
+        back: {name: 'tickets'}
       }
     },
     {

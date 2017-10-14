@@ -34,12 +34,56 @@ const actions = {
     const data = await throwOnError(axios().post('/api/ticket/', ticket, {
       headers
     })).catch(err => {
-      if (err.data)
-        commit('updateTicket', err.data);
+      if (err.data) {
+        if (!err.data.deleted)
+          commit('updateTicket', err.data.data);
+        else
+          commit('deleteTicket', err.data.data);
+      }
       throw err;
     });
     commit('updateTicket', data);
     return data;
+  },
+  async get({commit}, id) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    const data = await throwOnError(axios().get('/api/ticket/' + id, {
+      headers
+    }));
+    commit('updateTicket', data);
+    return data;
+  },
+  async find({commit}, query) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    const data = await throwOnError(axios().get('/api/ticket/', {
+      params: query,
+      headers
+    }));
+    for (let ticket of data.results)
+      commit('updateTicket', ticket);
+    return data;
+  },
+  async deleteTicket({commit}, id) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    await throwOnError(axios().delete('/api/ticket/' + id, {
+      headers
+    }));
+    commit('deleteTicket', id);
+  },
+  async getTicketToken(_, id) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    return await throwOnError(axios().get('/api/check-ticket/', {
+      params: {id},
+      headers
+    }));
   }
 };
 

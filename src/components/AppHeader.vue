@@ -26,10 +26,10 @@
         this.$store.commit('appshell/setDrawer', !drawer);
       },
       back() {
-        if (this.$route.meta.back)
+        /*if (this.$route.meta.back)
           this.$router.push(this.$route.meta.back);
-        else
-          this.$router.back();
+        else*/
+        this.$router.back();
       }
     }
   };

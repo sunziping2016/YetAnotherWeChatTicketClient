@@ -6,7 +6,7 @@
                 xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
           <v-card class="xs-fullscreen">
             <v-card-media
-              height="120px"
+              height="100px"
               :src="activity.titleImageThumbnail"
             >
               <div class="activity-image-mask"></div>
@@ -117,7 +117,8 @@
     data() {
       return {
         bottomVisible: false,
-        loading: false
+        loading: false,
+        deletedTicket: false
       };
     },
     computed: {
@@ -176,7 +177,7 @@
       bought() {
         if (this.activity && this.token && this.token.uid) {
           const ticket = this.$store.state.tickets.ticketsByActivity[this.activity._id];
-          return !!(ticket && ticket.owner === this.token.uid);
+          return !!(ticket && ticket.owner === this.token.uid || this.deletedTicket);
         }
         return false;
       },
@@ -207,7 +208,11 @@
         }).catch(err => {
           switch (err.message) {
             case 'One user can only have one ticket':
-              this.$store.commit('appshell/addSnackbarMessage', '您已经抢到此活动票，一人一票');
+              if (err.data.deleted) {
+                this.deletedTicket = true;
+                this.$store.commit('appshell/addSnackbarMessage', '您已经检票，一人一票');
+              } else
+                this.$store.commit('appshell/addSnackbarMessage', '您已经抢到此活动票，一人一票');
               break;
             case 'Invalid activity':
               this.$store.commit('appshell/addSnackbarMessage', '抢票失败！');

@@ -5,9 +5,9 @@
                  ref="container"
     >
       <v-layout column>
-        <v-flex xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
+        <v-flex v-if="user"
+                xs12 sm10 offset-sm1 md8 offset-md2 lg6 offset-lg3>
           <v-card class="ma-2 activity-card" v-for="activity in activities"
-                  v-if="user"
                   :key="activity._id"
           >
             <v-card-media
@@ -44,16 +44,16 @@
             </v-card-text>
             <v-card-actions>
               <v-btn flat icon
-                     @click="deleteActivity(activity._id)">
+                     @click="goingToDelete = activity._id">
                 <v-icon>delete</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
               <v-btn flat icon v-if="!activity.published"
-                     @click="publishActivity(activity._id)">
+                     @click="goingToPublish = activity._id">
                 <v-icon>send</v-icon>
               </v-btn>
               <v-btn flat icon v-else
-                     @click="unpublishActivity(activity._id)">
+                     @click="goingToUnpublish = activity._id">
                 <v-icon>undo</v-icon>
               </v-btn>
               <v-btn flat icon
@@ -71,7 +71,7 @@
           <v-layout justify-space-around>
             <v-progress-circular v-if="!finished" indeterminate>
             </v-progress-circular>
-            <p v-else class="grey--text">没有更多未发布的活动啦╮(╯_╰)╭</p>
+            <p v-else class="grey--text">没有更多您的活动啦╮(╯_╰)╭</p>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -90,6 +90,46 @@
         </v-btn>
       </v-fab-transition>
     </v-container>
+
+    <v-dialog :value="!!goingToDelete" persistent>
+      <v-card>
+        <v-card-title class="headline">确认删除活动？</v-card-title>
+        <v-card-text>
+          <p>删除的活动将<b>永远无法找回</b>。</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click.native="goingToDelete = null">取消</v-btn>
+          <v-btn flat primary @click.native="deleteActivity">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog :value="!!goingToPublish" persistent>
+      <v-card>
+        <v-card-title class="headline">确认发布活动？</v-card-title>
+        <v-card-text>
+          <p>发布活动后如果再召回活动，会使用户的票消失，造成非常不好的影响。</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click.native="goingToPublish = null">取消</v-btn>
+          <v-btn flat primary @click.native="publishActivity">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog :value="!!goingToUnpublish" persistent>
+      <v-card>
+        <v-card-title class="headline">确认召回活动？</v-card-title>
+        <v-card-text>
+          <p>召回活动会使用户的票消失，造成非常不好的影响。</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click.native="goingToUnpublish = null">取消</v-btn>
+          <v-btn flat primary @click.native="unpublishActivity">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -101,7 +141,10 @@
     data() {
       return {
         finished: false,
-        loading: false
+        loading: false,
+        goingToDelete: null,
+        goingToPublish: null,
+        goingToUnpublish: null
       };
     },
     computed: {
@@ -137,7 +180,8 @@
     },
     watch: {
       user() {
-        this.onScroll();
+        if (this.activities.length < 5)
+          this.queryNext();
       }
     },
     methods: {
@@ -173,7 +217,9 @@
           this.queryNext();
 
       },
-      deleteActivity(id) {
+      deleteActivity() {
+        const id = this.goingToDelete;
+        this.goingToDelete = null;
         this.$store.dispatch('activities/deleteActivity', id).then(() => {
           this.$store.commit('appshell/addSnackbarMessage', '成功删除活动');
         }).catch(err => {
@@ -181,7 +227,9 @@
           this.$store.commit('appshell/addSnackbarMessage', err.message);
         });
       },
-      publishActivity(id) {
+      publishActivity() {
+        const id = this.goingToPublish;
+        this.goingToPublish = null;
         this.$store.dispatch('activities/patch', {
           _id: id,
           published: true
@@ -192,7 +240,9 @@
           this.$store.commit('appshell/addSnackbarMessage', err.message);
         });
       },
-      unpublishActivity(id) {
+      unpublishActivity() {
+        const id = this.goingToUnpublish;
+        this.goingToUnpublish = null;
         this.$store.dispatch('activities/patch', {
           _id: id,
           published: false
@@ -212,13 +262,12 @@
 </script>
 
 <style lang="stylus" scoped>
-  .headline
-    text-shadow 0 0 5px rgba(0,0,0,0.6)
-
   .create-activity-btn
     bottom 16px
 
   .activity-card
+    .headline
+      text-shadow 0 0 5px rgba(0,0,0,0.6)
     p
       margin 0 4px
     .label
