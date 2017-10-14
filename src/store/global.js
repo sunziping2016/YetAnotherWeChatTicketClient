@@ -51,7 +51,9 @@ const state = {
 
   serverTime: Date.now(),
   timer: null,
-  interval: null
+  interval: null,
+
+  enableSocket: localStorage.getItem('enableSocket') !== 'false'
 };
 
 const mutations = {
@@ -61,7 +63,8 @@ const mutations = {
   setSite(state, site) {
     state.site = site;
     setAxios(site);
-    setSocket(site);
+    if (state.enableSocket)
+      setSocket(site);
   },
   setAction(state, value) {
     state.action = value;
@@ -95,6 +98,14 @@ const mutations = {
   },
   setInterval(state, value) {
     state.interval = value;
+  },
+  setEnableSocket(state, value) {
+    state.enableSocket = value;
+    localStorage.setItem('enableSocket', value);
+    if (value)
+      setSocket(state.site);
+    else
+      setSocket(null);
   }
 };
 

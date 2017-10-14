@@ -18,8 +18,11 @@ export function throwOnError(result) {
 }
 
 let _axios = setAxios(window.location.origin),
-  _socket = setSocket(window.location.origin),
+  _socket = null,
   sioHandlers = {};
+
+if (localStorage.getItem('enableSocket') !== 'false')
+  _socket = setSocket(window.location.origin);
 
 export function axios() {
   return _axios;
