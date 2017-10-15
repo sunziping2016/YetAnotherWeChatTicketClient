@@ -23,6 +23,7 @@ const EditActivity = () => import('./EditActivity.vue');
 const Ticket = () => import('./Ticket.vue');
 const Users = () => import('./Users.vue');
 const CreateUser = () => import('./CreateUser.vue');
+const Wechat = () => import('./Wechat.vue');
 
 Vue.use(Router);
 
@@ -217,6 +218,16 @@ const router = new Router({
         title: '创建用户',
         level: 2,
         back: {name: 'users'}
+      }
+    },
+    {
+      path: '/admin/wechat-menu',
+      name: 'wechatMenu',
+      component: Wechat,
+      meta: {
+        title: '微信菜单设置',
+        level: 1,
+        back: {name: 'account'}
       }
     },
     {

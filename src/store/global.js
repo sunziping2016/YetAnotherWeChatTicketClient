@@ -164,7 +164,9 @@ const actions = {
         url: location.pathname,
         jsApiList: [
           'checkJsApi',
-          'scanQRCode'
+          'scanQRCode',
+          'onMenuShareTimeline',
+          'onMenuShareAppMessage',
         ]
       })).then(data => {
         wx.config(data);
@@ -194,8 +196,23 @@ const actions = {
         commit('setServerTime', +state.timeDelta + Date.now() + state.ping / 2);
       }, 1000));
     }, 1000 - state.serverTime % 1000));
+  },
+  getWechatMenu() {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    return throwOnError(axios().get('/api/wechat-menu/', {
+      headers
+    }));
+  },
+  setWechatMenu(_, menu) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    return throwOnError(axios().post('/api/wechat-menu/', menu, {
+      headers
+    }));
   }
-
 };
 
 export default {

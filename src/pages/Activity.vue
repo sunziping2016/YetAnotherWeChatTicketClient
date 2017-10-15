@@ -1,3 +1,4 @@
+<script src="index.js"></script>
 <template>
   <div>
     <v-container class="xs-pa-0" v-scroll="{callback: onScroll}">
@@ -183,12 +184,19 @@
       },
       token() {
         return this.$store.state.auth.token;
+      },
+      wechatSigned() {
+        return this.$store.state.global.wechatSigned;
       }
     },
     watch: {
       activity() {
         if (this.activity)
           this.$nextTick(() => this.onScroll());
+      },
+      wechatSigned() {
+        if (this.wechatSigned === true)
+          this.customizeShare();
       }
     },
     methods: {
@@ -224,6 +232,22 @@
         }).then(() => {
           this.loading = false;
         });
+      },
+      customizeShare() {
+        if (this.wechatSigned) {
+          console.log('haha');
+          wx.onMenuShareTimeline({
+            title: this.activity.name + ' - 紫荆之声',
+            link: location.origin + '/#/activity/' + this.activity._id,
+            imgUrl: location.origin + this.activity.mainImageThumbnail
+          });
+          wx.onMenuShareAppMessage({
+            title: this.activity.name + ' - 紫荆之声', // 分享标题
+            desc: this.activity.excerption,
+            link: location.origin + '/#/activity/' + this.activity._id,
+            imgUrl: location.origin + this.activity.mainImageThumbnail
+          });
+        }
       }
     },
     mounted() {
@@ -235,6 +259,8 @@
       }
       if (this.activity)
         this.onScroll();
+      this.$store.dispatch('global/signWechatJsApi');
+      this.customizeShare();
     }
   };
 </script>

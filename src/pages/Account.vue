@@ -109,7 +109,7 @@
                 </v-list-tile-action>
               </v-list-tile>
               <v-divider v-if="isAdmin" :inset="true"></v-divider>
-              <v-list-tile v-if="isAdmin" exact to="/admin/wechat">
+              <v-list-tile v-if="isAdmin" exact to="/admin/wechat-menu">
                 <v-list-tile-avatar>
                   <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center">
                     <svg version="1.1" viewBox="0 0 1000 1000"

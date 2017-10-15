@@ -44,10 +44,6 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn flat icon
-                   @click="">
-              <v-icon>share</v-icon>
-            </v-btn>
-            <v-btn flat icon
                    @click="$router.push(`/activity/${activity._id}`)">
               <v-icon>forward</v-icon>
             </v-btn>
