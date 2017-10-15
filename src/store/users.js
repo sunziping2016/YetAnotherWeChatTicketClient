@@ -34,6 +34,18 @@ const actions = {
     commit('updateUser', response);
     return response;
   },
+  async find({commit}, query) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    const data = await throwOnError(axios().get('/api/user/', {
+      params: query,
+      headers
+    }));
+    for (let user of data.results)
+      commit('updateUser', user);
+    return data;
+  },
   async patch({commit}, user) {
     const headers = {
       'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
@@ -49,6 +61,14 @@ const actions = {
     if (response)
       commit('updateUser', response);
     return response;
+  },
+  async deleteUser({commit}, id) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    await throwOnError(axios().delete('/api/user/' + id, {
+      headers
+    }));
   }
 };
 

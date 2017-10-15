@@ -124,15 +124,6 @@
       },
       serverTime() {
         return this.$store.state.global.serverTime;
-      },
-      deleteDialog: {
-        get() {
-          return !!this.goingToDelete;
-        },
-        set(v) {
-          if (!v)
-            this.goingToDelete = null;
-        }
       }
     },
     methods: {

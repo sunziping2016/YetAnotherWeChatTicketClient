@@ -30,12 +30,8 @@ let app = new Vue({
   mounted() {
     store.dispatch('global/startTimer');
     store.dispatch('auth/byToken', this.$route.query.token).catch(error => {
-      if (error.type === 'EAUTH')
-        store.commit('appshell/addSnackbarMessage', '验证信息错误');
-      else {
-        console.error(error);
-        store.commit('appshell/addSnackbarMessage', error.message);
-      }
+      console.error(error);
+      store.commit('appshell/addSnackbarMessage', error.message);
     }).then(() => {
       const action = this.$route.query.action,
         sessToken = this.$route.query.token,
@@ -92,8 +88,8 @@ let app = new Vue({
 router.onReady(()=> app.$mount('#app'));
 
 router.beforeEach((to, from, next) => {
-  if (window.scrollY !== 0)
-    window.scrollTo(window.scrollX, 0);
+  //if (window.scrollY !== 0)
+  //  window.scrollTo(window.scrollX, 0);
   next();
 });
 
