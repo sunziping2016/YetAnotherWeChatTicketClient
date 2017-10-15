@@ -90,6 +90,7 @@ router.onReady(()=> app.$mount('#app'));
 router.beforeEach((to, from, next) => {
   //if (window.scrollY !== 0)
   //  window.scrollTo(window.scrollX, 0);
+  store.commit('global/setHasBack', true);
   next();
 });
 

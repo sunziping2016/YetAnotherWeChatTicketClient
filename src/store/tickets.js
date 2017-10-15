@@ -76,20 +76,20 @@ const actions = {
     }));
     commit('deleteTicket', id);
   },
-  async getTicketToken(_, id) {
+  getTicketToken(_, id) {
     const headers = {
       'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
     };
-    return await throwOnError(axios().get('/api/check-ticket/', {
+    return throwOnError(axios().get('/api/check-ticket/', {
       params: {id},
       headers
     }));
   },
-  async checkTicketToken(_, token) {
+  checkTicketToken(_, token) {
     const headers = {
       'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
     };
-    return await throwOnError(axios().post('/api/check-ticket/', {token}, {
+    return throwOnError(axios().post('/api/check-ticket/', {token}, {
       headers
     }));
   }

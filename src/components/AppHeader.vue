@@ -29,7 +29,10 @@
         /*if (this.$route.meta.back)
           this.$router.push(this.$route.meta.back);
         else*/
-        this.$router.back();
+        if (!this.$store.state.global.hasBack && this.$route.meta.back)
+          this.$router.push(this.$route.meta.back);
+        else
+          this.$router.back();
       }
     }
   };

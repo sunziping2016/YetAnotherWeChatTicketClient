@@ -53,12 +53,17 @@ const state = {
   timer: null,
   interval: null,
 
-  enableSocket: localStorage.getItem('enableSocket') !== 'false'
+  enableSocket: localStorage.getItem('enableSocket') !== 'false',
+
+  hasBack: false
 };
 
 const mutations = {
   setWechat(state, value) {
     state.isWechat = value;
+  },
+  setHasBack(state, value) {
+    state.hasBack = value;
   },
   setSite(state, site) {
     state.site = site;

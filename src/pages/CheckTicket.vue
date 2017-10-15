@@ -18,14 +18,6 @@
                 <span class="value">{{activity.name}}</span>
               </p>
               <p>
-                <span class="label">活动状态:</span>
-                <span class="value">{{statusString}}</span>
-              </p>
-              <p>
-                <span class="label">活动时间:</span>
-                <span class="value">{{activityTime}}</span>
-              </p>
-              <p>
                 <span class="label">活动票数:</span>
                 <span class="value">{{activity.totalTickets}} 张</span>
               </p>
@@ -54,8 +46,6 @@
 </template>
 
 <script>
-  import {durationToString, activityStatus, activityStatusString} from './utils';
-
   export default {
     name: 'checkTicket',
     data() {
@@ -71,56 +61,39 @@
       },
       wechatSigned() {
         return this.$store.state.global.wechatSigned;
-      },
-      activityTime() {
-        if (this.activity)
-          return durationToString(this.activity.beginTime, this.activity.endTime);
-        return '';
-      },
-      serverTime() {
-        return this.$store.state.global.serverTime;
-      },
-      status() {
-        if (this.activity)
-          return activityStatus(this.activity, new Date(this.serverTime));
-        return null;
-      },
-      statusString() {
-        if (this.status !== null)
-          return activityStatusString(this.status);
-        return null;
       }
     },
     methods: {
       onScan() {
-        if (this.wechatSigned === true)
-        this.loading = true;
-        wx.scanQRCode({
-          needResult: 1,
-          success: res => {
-            this.$store.dispatch('tickets/checkTicketToken', res.resultStr).then(activity => {
-              this.activity = activity;
-              if (this.continuous)
-                this.onScan();
-            }).catch(err => {
-              this.activity = null;
-              console.error(err);
-              this.$store.commit('appshell/addSnackbarMessage', err.message);
-            }).then(() => {
+        if (this.wechatSigned === true) {
+          this.loading = true;
+          wx.scanQRCode({
+            needResult: 1,
+            success: res => {
+              this.$store.dispatch('tickets/checkTicketToken', res.resultStr).then(activity => {
+                this.loading = false;
+                this.activity = activity;
+                if (this.continuous)
+                  this.onScan();
+              }).catch(err => {
+                this.loading = false;
+                this.activity = null;
+                console.error(err);
+                this.$store.commit('appshell/addSnackbarMessage', err.message);
+              });
+            },
+            failed: res => {
+              console.error(res);
+              this.$store.commit('appshell/addSnackbarMessage', res.errMsg);
               this.loading = false;
-            })
-          },
-          failed: res => {
-            console.error(res);
-            this.$store.commit('appshell/addSnackbarMessage', res.errMsg);
-            this.loading = false;
-            this.activity = null;
-          },
-          cancel: () => {
-            this.loading = false;
-            this.activity = null;
-          }
-        });
+              this.activity = null;
+            },
+            cancel: () => {
+              this.loading = false;
+              this.activity = null;
+            }
+          });
+        }
       }
     },
     mounted() {
