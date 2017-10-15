@@ -21,6 +21,7 @@ const ActivityPreview = () => import('./ActivityPreview.vue');
 const CheckTicket = () => import('./CheckTicket.vue');
 const EditActivity = () => import('./EditActivity.vue');
 const Ticket = () => import('./Ticket.vue');
+const Users = () => import('./Users.vue');
 
 Vue.use(Router);
 
@@ -193,6 +194,16 @@ const router = new Router({
       component: CheckTicket,
       meta: {
         title: '开始检票',
+        level: 1,
+        back: {name: 'account'}
+      }
+    },
+    {
+      path: '/admin/users',
+      name: 'users',
+      component: Users,
+      meta: {
+        title: '管理用户',
         level: 1,
         back: {name: 'account'}
       }

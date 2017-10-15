@@ -52,6 +52,14 @@
                   <span class="label">活动票数:</span>
                   <span class="value">{{activity.totalTickets}} 张</span>
                 </p>
+                <p>
+                  <span class="label">剩余票数:</span>
+                  <span class="value">{{activity.remainTickets}} 张</span>
+                </p>
+                <p>
+                  <span class="label">已检票数:</span>
+                  <span class="value">{{activity.checkedTickets}} 张</span>
+                </p>
               </div>
               <div class="activity-corner"></div>
               <div class="activity-details">
@@ -119,7 +127,12 @@
         return '';
       },
       bookCountingDown() {
-        const time = this.activity.bookBeginTime.getTime() - this.serverTime;
+        let countTime;
+        if (this.status < 2)
+          countTime = this.activity.bookBeginTime.getTime();
+        else
+          countTime = this.activity.bookEndTime.getTime();
+        const time = countTime - this.serverTime;
         if (time > 0)
           return countingDownToString(time);
         return ''
@@ -145,11 +158,9 @@
       }
     },
     watch: {
-      activity(value, oldValue) {
+      activity(value) {
         if (this.activity)
           this.$nextTick(() => this.onScroll());
-        if (value && !oldValue)
-          this.updateActivity();
       },
       user() {
         if (this.user)
@@ -223,7 +234,7 @@
   .activity-info
     line-height 1.5em
     padding 13px 0
-    margin 0 28px
+    margin 0 10px
     clear both
     p
       margin 3px

@@ -25,13 +25,13 @@
                   </p>
                   <p>
                     <span class="label">退票方式：</span>
-                    微信中回复“退票 {{activity.shortName}}”或点击“我的票夹”的删除
+                    微信中回复“退票 {{activity.shortName}}”或点击“我的票夹”中的“删除”按钮
                   </p>
                 </div>
                 <div class="dot"></div>
               </dd>
-              <dd>
-                <div v-if="status === 1" class="ticket-qrcode">
+              <dd v-if="status === 1">
+                <div class="ticket-qrcode">
                   <qrcode v-if="token" :value="token"
                           :size="240"
                           :fg-color="expired || loading ? '#e6e6e6' : '#000000'"
@@ -190,13 +190,13 @@
       margin-bottom 24px
 
     dt
-      font-size: 1.1em
-      height: 30px;
-      border-radius: 5px 5px 0 0;
-      line-height: 30px;
-      background: #f2f2f2;
-      overflow: hidden;
-      padding: 0 10px;
+      font-size 1.1em
+      height 30px
+      border-radius 5px 5px 0 0
+      line-height 30px
+      background #f2f2f2
+      overflow hidden
+      padding 0 10px
 
     dd
       position relative
@@ -204,37 +204,37 @@
       &:first-of-type
         &::after, &::before
           position absolute
-          bottom: -10px;
-          height: 20px;
-          width: 10px;
-          content: "";
-          background: #1b1f25
+          bottom -10px
+          height 20px
+          width 10px
+          content ""
+          background #1b1f25
         &::before
-          right: 0;
-          border-radius: 10px 0 0 10px;
+          right 0
+          border-radius 10px 0 0 10px
         &::after
-          left: 0;
-          border-radius: 0 10px 10px 0;
+          left 0
+          border-radius 0 10px 10px 0
       &:nth-of-type(2)
         text-align center
 
     .dot, .large-dot
-      position: absolute;
-      left: 0
-      border-bottom: 0;
-      width: 100%;
+      position absolute
+      left 0
+      border-bottom 0
+      width 100%
     .dot
-      bottom: -4px;
-      padding: 4px 0;
-      background: radial-gradient(#1e2329 2px,#1e2329 2px,transparent 3px,transparent);
-      background-size: 7px 7px;
-      background-position: 0 71px;
+      bottom -4px
+      padding 4px 0
+      background radial-gradient(#1e2329 2px,#1e2329 2px,transparent 3px,transparent)
+      background-size 7px 7px
+      background-position 0 71px
     .large-dot
-      bottom: 0;
-      padding: 3px 0;
-      background: radial-gradient(#1e2329 5px,#1e2329 5px,transparent 6px,transparent);
-      background-size: 13px 13px;
-      background-position: 0 78px;
+      bottom 0
+      padding 3px 0
+      background radial-gradient(#1e2329 5px,#1e2329 5px,transparent 6px,transparent)
+      background-size 13px 13px
+      background-position 0 78px
 
     h3
       font-size 18px
@@ -243,21 +243,21 @@
       font-weight 400
       margin 10px 0
     .ticket-status
-      background: #a7adb4;
-      color: #fff;
-      padding: 2px 5px;
-      border-radius: 2px;
+      background #a7adb4
+      color #fff
+      padding 2px 5px
+      border-radius 2px
       font-size 16px
     .ticket-info
       p
-        margin 0 16px;
+        margin 0 16px
       .label
         font-weight bold
     .ticket-qrcode
-      margin: 16px
-      border-radius: 10px;
-      border: dotted;
-      border-color: #aeaeae;
+      margin 16px
+      border-radius 10px
+      border dotted
+      border-color #aeaeae
       display inline-block
       position relative
     .ticket-qrcode-loading

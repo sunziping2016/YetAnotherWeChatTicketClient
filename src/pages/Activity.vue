@@ -283,7 +283,7 @@
   .activity-info
     line-height 1.5em
     padding 13px 0
-    margin 0 20px
+    margin 0 10px
     clear both
     p
       margin 3px

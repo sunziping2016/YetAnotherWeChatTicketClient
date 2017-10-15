@@ -84,6 +84,14 @@ const actions = {
       params: {id},
       headers
     }));
+  },
+  async checkTicketToken(_, token) {
+    const headers = {
+      'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+    };
+    return await throwOnError(axios().post('/api/check-ticket/', {token}, {
+      headers
+    }));
   }
 };
 
