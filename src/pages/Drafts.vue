@@ -76,19 +76,17 @@
         </v-flex>
       </v-layout>
 
-      <v-fab-transition>
-        <v-btn
-          exact to="/admin/create-activity"
-          class="create-activity-btn"
-          dark
-          absolute
-          right
-          fab
-          primary
-        >
-          <v-icon>add</v-icon>
-        </v-btn>
-      </v-fab-transition>
+      <v-btn
+        exact to="/admin/create-activity"
+        class="create-activity-btn"
+        dark
+        absolute
+        right
+        fab
+        primary
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
     </v-container>
 
     <v-dialog :value="!!goingToDelete" persistent>

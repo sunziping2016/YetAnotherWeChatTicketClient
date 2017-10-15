@@ -49,9 +49,24 @@
                 </v-list-tile>
               </template>
             </v-list>
+            <v-layout justify-space-around>
+              <v-progress-circular v-if="!finished" indeterminate>
+              </v-progress-circular>
+            </v-layout>
           </v-card>
         </v-flex>
       </v-layout>
+      <v-btn
+        exact to="/admin/create-user"
+        class="create-user-btn"
+        dark
+        absolute
+        right
+        fab
+        primary
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
     </v-container>
     <v-dialog :value="!!goingToDelete" persistent>
       <v-card>
@@ -219,6 +234,8 @@
 </script>
 
 <style lang="stylus" scoped>
+  .create-user-btn
+    bottom 16px
 </style>
 
 <style lang="stylus">

@@ -30,6 +30,9 @@ const actions = {
       headers['Content-Type'] = 'multipart/form-data';
       user = objectToFormData(user);
     }
+    if (user.username || user.roles) {
+      headers.Authorization = `Bearer ${window.localStorage.getItem('jwt')}`
+    }
     let response = await throwOnError(axios().post('/api/user/', user, {headers}));
     commit('updateUser', response);
     return response;

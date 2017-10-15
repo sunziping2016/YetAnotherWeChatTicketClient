@@ -22,6 +22,7 @@ const CheckTicket = () => import('./CheckTicket.vue');
 const EditActivity = () => import('./EditActivity.vue');
 const Ticket = () => import('./Ticket.vue');
 const Users = () => import('./Users.vue');
+const CreateUser = () => import('./CreateUser.vue');
 
 Vue.use(Router);
 
@@ -206,6 +207,16 @@ const router = new Router({
         title: '管理用户',
         level: 1,
         back: {name: 'account'}
+      }
+    },
+    {
+      path: '/admin/create-user',
+      name: 'createUser',
+      component: CreateUser,
+      meta: {
+        title: '创建用户',
+        level: 2,
+        back: {name: 'users'}
       }
     },
     {
